@@ -29,3 +29,12 @@ class FetchTicketDetailsRequested extends TicketEvent {
   @override
   List<Object> get props => [ticketId];
 }
+
+class DownloadInvoiceRequested extends TicketEvent {
+  final int ticketId;
+
+  const DownloadInvoiceRequested(this.ticketId);
+
+  @override
+  List<Object> get props => [ticketId];
+}

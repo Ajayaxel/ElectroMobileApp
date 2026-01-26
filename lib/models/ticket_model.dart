@@ -14,6 +14,11 @@ class CreateTicketRequest extends Equatable {
   final double longitude;
   final List<File>? attachments;
   final String? redeemCode;
+  final String?
+  paymentMethod; // "cod" for cash on delivery, null for online payment
+  final String bookingType; // "instant" or "scheduled"
+  final String?
+  scheduledAt; // DateTime string in format "YYYY-MM-DD HH:mm:ss", null for instant booking
 
   const CreateTicketRequest({
     required this.issueCategoryId,
@@ -28,23 +33,29 @@ class CreateTicketRequest extends Equatable {
     required this.longitude,
     this.attachments,
     this.redeemCode,
+    this.paymentMethod,
+    required this.bookingType,
+    this.scheduledAt,
   });
 
   @override
   List<Object?> get props => [
-        issueCategoryId,
-        issueCategorySubTypeId,
-        vehicleTypeId,
-        brandId,
-        modelId,
-        numberPlate,
-        description,
-        location,
-        latitude,
-        longitude,
-        attachments,
-        redeemCode,
-      ];
+    issueCategoryId,
+    issueCategorySubTypeId,
+    vehicleTypeId,
+    brandId,
+    modelId,
+    numberPlate,
+    description,
+    location,
+    latitude,
+    longitude,
+    attachments,
+    redeemCode,
+    paymentMethod,
+    bookingType,
+    scheduledAt,
+  ];
 }
 
 class CreateTicketResponse extends Equatable {
@@ -102,13 +113,13 @@ class TicketData extends Equatable {
 
   @override
   List<Object?> get props => [
-        paymentRequired,
-        paymentUrl,
-        intentionId,
-        clientSecret,
-        paymentBreakdown,
-        ticket,
-      ];
+    paymentRequired,
+    paymentUrl,
+    intentionId,
+    clientSecret,
+    paymentBreakdown,
+    ticket,
+  ];
 }
 
 class Ticket extends Equatable {
@@ -151,73 +162,141 @@ class Ticket extends Equatable {
   });
 
   factory Ticket.fromJson(Map<String, dynamic> json) {
+    // Handle location field - it can be either a String or a Map
+    String? locationString;
+    try {
+      if (json['location'] != null) {
+        if (json['location'] is String) {
+          locationString = json['location'];
+        } else if (json['location'] is Map) {
+          // If location is a Map, try to extract address or use a formatted string
+          final locationMap = json['location'] as Map<String, dynamic>;
+          locationString =
+              locationMap['address']?.toString() ??
+              locationMap['formatted_address']?.toString() ??
+              locationMap['name']?.toString() ??
+              'Location details available';
+        }
+      }
+    } catch (e) {
+      print('⚠️ [Ticket] Error parsing location: $e');
+      locationString = 'Location unavailable';
+    }
+
+    // Handle latitude and longitude safely
+    String? latitudeString;
+    String? longitudeString;
+    try {
+      latitudeString = json['latitude']?.toString();
+      longitudeString = json['longitude']?.toString();
+    } catch (e) {
+      print('⚠️ [Ticket] Error parsing coordinates: $e');
+    }
+
+    // Handle issue_category safely
+    TicketIssueCategory? issueCategory;
+    try {
+      if (json['issue_category'] != null && json['issue_category'] is Map) {
+        issueCategory = TicketIssueCategory.fromJson(json['issue_category']);
+      }
+    } catch (e) {
+      print('⚠️ [Ticket] Error parsing issue_category: $e');
+    }
+
+    // Handle issue_category_sub_type safely
+    TicketIssueCategorySubType? issueCategorySubType;
+    try {
+      if (json['issue_category_sub_type'] != null &&
+          json['issue_category_sub_type'] is Map) {
+        issueCategorySubType = TicketIssueCategorySubType.fromJson(
+          json['issue_category_sub_type'],
+        );
+      }
+    } catch (e) {
+      print('⚠️ [Ticket] Error parsing issue_category_sub_type: $e');
+    }
+
+    // Handle driver safely
+    TicketDriver? driver;
+    try {
+      if (json['driver'] != null && json['driver'] is Map) {
+        driver = TicketDriver.fromJson(json['driver']);
+      }
+    } catch (e) {
+      print('⚠️ [Ticket] Error parsing driver: $e');
+    }
+
+    // Handle attachments safely
+    List<String> attachments = [];
+    try {
+      if (json['attachments'] != null && json['attachments'] is List) {
+        attachments = List<String>.from(json['attachments']);
+      }
+    } catch (e) {
+      print('⚠️ [Ticket] Error parsing attachments: $e');
+    }
+
+    // Handle invoice safely
+    TicketInvoice? invoice;
+    try {
+      if (json['invoice'] != null && json['invoice'] is Map) {
+        invoice = TicketInvoice.fromJson(json['invoice']);
+      }
+    } catch (e) {
+      print('⚠️ [Ticket] Error parsing invoice: $e');
+    }
+
     return Ticket(
       id: json['id'] ?? 0,
-      ticketId: json['ticket_id'] ?? '',
+      ticketId: json['ticket_id']?.toString() ?? '',
       customerId: json['customer_id'] ?? 0,
-      paymentMethod: json['payment_method'],
-      bookingType: json['booking_type'],
-      scheduledAt: json['scheduled_at'],
-      issueCategory: json['issue_category'] != null
-          ? TicketIssueCategory.fromJson(json['issue_category'])
-          : null,
-      issueCategorySubType: json['issue_category_sub_type'] != null
-          ? TicketIssueCategorySubType.fromJson(json['issue_category_sub_type'])
-          : null,
-      location: json['location'],
-      latitude: json['latitude']?.toString(),
-      longitude: json['longitude']?.toString(),
-      status: json['status'],
-      driver: json['driver'] != null
-          ? TicketDriver.fromJson(json['driver'])
-          : null,
-      attachments: json['attachments'] != null
-          ? List<String>.from(json['attachments'])
-          : [],
-      invoice: json['invoice'] != null
-          ? TicketInvoice.fromJson(json['invoice'])
-          : null,
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
+      paymentMethod: json['payment_method']?.toString(),
+      bookingType: json['booking_type']?.toString(),
+      scheduledAt: json['scheduled_at']?.toString(),
+      issueCategory: issueCategory,
+      issueCategorySubType: issueCategorySubType,
+      location: locationString,
+      latitude: latitudeString,
+      longitude: longitudeString,
+      status: json['status']?.toString(),
+      driver: driver,
+      attachments: attachments,
+      invoice: invoice,
+      createdAt: json['created_at']?.toString(),
+      updatedAt: json['updated_at']?.toString(),
     );
   }
 
   @override
   List<Object?> get props => [
-        id,
-        ticketId,
-        customerId,
-        paymentMethod,
-        bookingType,
-        scheduledAt,
-        issueCategory,
-        issueCategorySubType,
-        location,
-        latitude,
-        longitude,
-        status,
-        driver,
-        attachments,
-        invoice,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    ticketId,
+    customerId,
+    paymentMethod,
+    bookingType,
+    scheduledAt,
+    issueCategory,
+    issueCategorySubType,
+    location,
+    latitude,
+    longitude,
+    status,
+    driver,
+    attachments,
+    invoice,
+    createdAt,
+    updatedAt,
+  ];
 }
 
 class TicketIssueCategory extends Equatable {
   final int id;
   final String name;
 
-  const TicketIssueCategory({
-    required this.id,
-    required this.name,
-  });
+  const TicketIssueCategory({required this.id, required this.name});
 
   factory TicketIssueCategory.fromJson(Map<String, dynamic> json) {
-    return TicketIssueCategory(
-      id: json['id'] ?? 0,
-      name: json['name'] ?? '',
-    );
+    return TicketIssueCategory(id: json['id'] ?? 0, name: json['name'] ?? '');
   }
 
   @override
@@ -259,12 +338,7 @@ class TicketDriver extends Equatable {
   final String? phone;
   final String? image;
 
-  const TicketDriver({
-    this.id,
-    this.name,
-    this.phone,
-    this.image,
-  });
+  const TicketDriver({this.id, this.name, this.phone, this.image});
 
   factory TicketDriver.fromJson(Map<String, dynamic> json) {
     return TicketDriver(
@@ -318,16 +392,16 @@ class TicketInvoice extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        invoiceNumber,
-        invoiceUrl,
-        subtotal,
-        vatAmount,
-        discountAmount,
-        totalAmount,
-        currency,
-        createdAt,
-      ];
+    id,
+    invoiceNumber,
+    invoiceUrl,
+    subtotal,
+    vatAmount,
+    discountAmount,
+    totalAmount,
+    currency,
+    createdAt,
+  ];
 }
 
 class PaymentBreakdown extends Equatable {
@@ -363,24 +437,21 @@ class PaymentBreakdown extends Equatable {
 
   @override
   List<Object?> get props => [
-        baseAmount,
-        vatAmount,
-        totalAmount,
-        currency,
-        discountApplied,
-        discountAmount,
-        redeemCode,
-      ];
+    baseAmount,
+    vatAmount,
+    totalAmount,
+    currency,
+    discountApplied,
+    discountAmount,
+    redeemCode,
+  ];
 }
 
 class TicketDetailsResponse extends Equatable {
   final bool success;
   final TicketDetailsData? data;
 
-  const TicketDetailsResponse({
-    required this.success,
-    this.data,
-  });
+  const TicketDetailsResponse({required this.success, this.data});
 
   factory TicketDetailsResponse.fromJson(Map<String, dynamic> json) {
     return TicketDetailsResponse(
@@ -398,9 +469,7 @@ class TicketDetailsResponse extends Equatable {
 class TicketDetailsData extends Equatable {
   final Ticket? ticket;
 
-  const TicketDetailsData({
-    this.ticket,
-  });
+  const TicketDetailsData({this.ticket});
 
   factory TicketDetailsData.fromJson(Map<String, dynamic> json) {
     return TicketDetailsData(
@@ -416,17 +485,12 @@ class TicketListResponse extends Equatable {
   final bool success;
   final TicketListData? data;
 
-  const TicketListResponse({
-    required this.success,
-    this.data,
-  });
+  const TicketListResponse({required this.success, this.data});
 
   factory TicketListResponse.fromJson(Map<String, dynamic> json) {
     return TicketListResponse(
       success: json['success'] ?? false,
-      data: json['data'] != null
-          ? TicketListData.fromJson(json['data'])
-          : null,
+      data: json['data'] != null ? TicketListData.fromJson(json['data']) : null,
     );
   }
 
@@ -437,9 +501,7 @@ class TicketListResponse extends Equatable {
 class TicketListData extends Equatable {
   final List<Ticket> tickets;
 
-  const TicketListData({
-    required this.tickets,
-  });
+  const TicketListData({required this.tickets});
 
   factory TicketListData.fromJson(Map<String, dynamic> json) {
     final List<dynamic> ticketsJson = json['tickets'] ?? [];

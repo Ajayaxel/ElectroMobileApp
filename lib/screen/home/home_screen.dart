@@ -19,6 +19,7 @@ import 'package:onecharge/models/vehicle_list_model.dart';
 import 'package:onecharge/models/ticket_model.dart';
 import 'package:onecharge/core/storage/vehicle_storage.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:onecharge/screen/notification/notification_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -124,7 +125,89 @@ class HomeScreenState extends State<HomeScreen> {
     activeState = null;
     _serviceTimer?.cancel();
     _searchController.dispose();
+    _toastEntry?.remove();
     super.dispose();
+  }
+
+  OverlayEntry? _toastEntry;
+
+  void showToast(String message) {
+    _toastEntry?.remove();
+    _toastEntry = null;
+
+    final overlayState = Overlay.maybeOf(context);
+    if (overlayState == null) return;
+
+    final entry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: MediaQuery.of(context).padding.top + 20,
+        right: 20,
+        left: 20,
+        child: Material(
+          color: Colors.transparent,
+          child: TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.0, end: 1.0),
+            duration: const Duration(milliseconds: 300),
+            builder: (context, value, child) {
+              return Opacity(
+                opacity: value,
+                child: Transform.translate(
+                  offset: Offset(0, -20 * (1 - value)),
+                  child: child,
+                ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.check_circle_outline,
+                    color: Colors.green,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 10),
+                  Flexible(
+                    child: Text(
+                      message,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Lufga',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    _toastEntry = entry;
+    overlayState.insert(entry);
+
+    Future.delayed(const Duration(seconds: 4), () {
+      if (!mounted) return;
+      if (_toastEntry == entry) {
+        _toastEntry?.remove();
+        _toastEntry = null;
+      }
+    });
   }
 
   void startServiceFlow({Ticket? ticket}) {
@@ -176,7 +259,6 @@ class HomeScreenState extends State<HomeScreen> {
     });
   }
 
-
   void _showVehicleSelectionBottomSheet(String category) {
     showModalBottomSheet(
       context: context,
@@ -220,14 +302,18 @@ class HomeScreenState extends State<HomeScreen> {
               );
             }
 
-            final vehicleList = state is VehicleListLoaded ? state.vehicles : <VehicleListItem>[];
+            final vehicleList = state is VehicleListLoaded
+                ? state.vehicles
+                : <VehicleListItem>[];
 
             return StatefulBuilder(
               builder: (context, setSheetState) {
                 return Container(
                   decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
                   ),
                   padding: const EdgeInsets.all(20.00),
                   child: Column(
@@ -474,15 +560,25 @@ class HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: const BoxDecoration(
-                          color: Color(0xffF5F5F5),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.notifications_none_outlined,
-                          size: 28,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const NotificationScreen(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: const BoxDecoration(
+                            color: Color(0xffF5F5F5),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.notifications_none_outlined,
+                            size: 28,
+                          ),
                         ),
                       ),
                     ],
@@ -591,13 +687,20 @@ class HomeScreenState extends State<HomeScreen> {
                         // Filter out 'Other' if it exists in the API list to avoid duplication
                         // Also filter out categories with null names
                         var categories = state.categories
-                            .where((c) => c.name != null && c.name!.toLowerCase() != 'other')
+                            .where(
+                              (c) =>
+                                  c.name != null &&
+                                  c.name!.toLowerCase() != 'other',
+                            )
                             .toList();
 
                         if (_searchQuery.isNotEmpty) {
                           categories = categories
-                              .where((c) =>
-                                  (c.name ?? '').toLowerCase().contains(_searchQuery))
+                              .where(
+                                (c) => (c.name ?? '').toLowerCase().contains(
+                                  _searchQuery,
+                                ),
+                              )
                               .toList();
                         }
 
@@ -611,7 +714,8 @@ class HomeScreenState extends State<HomeScreen> {
                               children: [
                                 ...List.generate(categories.length, (index) {
                                   final category = categories[index];
-                                  final categoryName = category.name ?? 'Unknown';
+                                  final categoryName =
+                                      category.name ?? 'Unknown';
                                   return _buildServiceCard(
                                     index,
                                     categoryName,
@@ -671,9 +775,8 @@ class HomeScreenState extends State<HomeScreen> {
                     context: context,
                     isScrollControlled: true,
                     backgroundColor: Colors.transparent,
-                    builder: (context) => ServiceSummaryBottomSheet(
-                      ticketId: ticketId,
-                    ),
+                    builder: (context) =>
+                        ServiceSummaryBottomSheet(ticketId: ticketId),
                   );
                 },
               ),

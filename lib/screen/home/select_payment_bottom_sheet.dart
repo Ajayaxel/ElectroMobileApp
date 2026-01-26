@@ -125,24 +125,8 @@ class _SelectPaymentBottomSheetState extends State<SelectPaymentBottomSheet> {
           ),
           if (widget.paymentUrl != null) ...[
             const SizedBox(height: 16),
-            _buildPaymentOption(
-              id: "paymob",
-              title: "Paymob",
-              logo: null,
-            ),
+            _buildPaymentOption(id: "paymob", title: "Paymob", logo: null),
           ],
-
-          const SizedBox(height: 16),
-          const Text(
-            "Other Payment",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              fontFamily: 'Lufga',
-            ),
-          ),
-          const SizedBox(height: 16),
-          _buildPaymentOption(id: "cash", title: "Pay by cash"),
 
           const SizedBox(height: 16),
           OneBtn(

@@ -10,6 +10,20 @@ class TicketBloc extends Bloc<TicketEvent, TicketState> {
     on<CreateTicketRequested>(_onCreateTicketRequested);
     on<FetchTicketsRequested>(_onFetchTicketsRequested);
     on<FetchTicketDetailsRequested>(_onFetchTicketDetailsRequested);
+    on<DownloadInvoiceRequested>(_onDownloadInvoiceRequested);
+  }
+
+  Future<void> _onDownloadInvoiceRequested(
+    DownloadInvoiceRequested event,
+    Emitter<TicketState> emit,
+  ) async {
+    emit(InvoiceDownloadLoading());
+    try {
+      final filePath = await issueRepository.downloadInvoice(event.ticketId);
+      emit(InvoiceDownloadSuccess(filePath));
+    } catch (e) {
+      emit(InvoiceDownloadError(e.toString()));
+    }
   }
 
   Future<void> _onCreateTicketRequested(
@@ -19,22 +33,26 @@ class TicketBloc extends Bloc<TicketEvent, TicketState> {
     emit(TicketLoading());
     try {
       final response = await issueRepository.createTicket(event.request);
-      
+
       // Print the API response to console
       print('✅ [TicketBloc] Ticket created successfully!');
       print('📦 [TicketBloc] Message: ${response.message}');
       if (response.data != null) {
-        print('💳 [TicketBloc] Payment Required: ${response.data!.paymentRequired}');
+        print(
+          '💳 [TicketBloc] Payment Required: ${response.data!.paymentRequired}',
+        );
         if (response.data!.paymentUrl != null) {
           print('🔗 [TicketBloc] Payment URL: ${response.data!.paymentUrl}');
         }
         if (response.data!.paymentBreakdown != null) {
           final breakdown = response.data!.paymentBreakdown!;
-          print('💰 [TicketBloc] Total Amount: ${breakdown.totalAmount} ${breakdown.currency}');
+          print(
+            '💰 [TicketBloc] Total Amount: ${breakdown.totalAmount} ${breakdown.currency}',
+          );
         }
       }
       print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      
+
       emit(TicketSuccess(response));
     } catch (e) {
       print('❌ [TicketBloc] Error creating ticket: $e');

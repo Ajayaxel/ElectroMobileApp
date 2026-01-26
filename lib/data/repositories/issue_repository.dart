@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:onecharge/core/network/api_client.dart';
 import 'package:onecharge/models/issue_category_model.dart';
 import 'package:onecharge/models/ticket_model.dart';
+import 'package:path_provider/path_provider.dart';
 
 class IssueRepository {
   final ApiClient apiClient;
@@ -27,9 +28,7 @@ class IssueRepository {
     }
   }
 
-  Future<CreateTicketResponse> createTicket(
-    CreateTicketRequest request,
-  ) async {
+  Future<CreateTicketResponse> createTicket(CreateTicketRequest request) async {
     try {
       final formData = FormData.fromMap({
         'issue_category_id': request.issueCategoryId,
@@ -46,6 +45,11 @@ class IssueRepository {
         'longitude': request.longitude,
         if (request.redeemCode != null && request.redeemCode!.isNotEmpty)
           'redeem_code': request.redeemCode,
+        if (request.paymentMethod != null && request.paymentMethod!.isNotEmpty)
+          'payment_method': request.paymentMethod,
+        'booking_type': request.bookingType,
+        if (request.scheduledAt != null && request.scheduledAt!.isNotEmpty)
+          'scheduled_at': request.scheduledAt,
       });
 
       // Add attachments if any
@@ -74,7 +78,7 @@ class IssueRepository {
         // Parse validation errors if present
         final errors = response.data['errors'];
         String errorMessage = response.data['message'] ?? 'Unknown error';
-        
+
         if (errors != null && errors is Map) {
           final errorList = <String>[];
           errors.forEach((key, value) {
@@ -88,7 +92,7 @@ class IssueRepository {
             errorMessage = '${errorMessage}\n${errorList.join('\n')}';
           }
         }
-        
+
         throw Exception('Failed to create ticket: $errorMessage');
       }
     } on DioException catch (e) {
@@ -98,7 +102,7 @@ class IssueRepository {
         if (responseData is Map) {
           final errors = responseData['errors'];
           String errorMessage = responseData['message'] ?? 'Validation failed';
-          
+
           if (errors != null && errors is Map) {
             final errorList = <String>[];
             errors.forEach((key, value) {
@@ -112,7 +116,9 @@ class IssueRepository {
               errorMessage = '${errorMessage}\n${errorList.join('\n')}';
             }
           }
-          throw Exception('API Error: ${e.response?.statusCode} - $errorMessage');
+          throw Exception(
+            'API Error: ${e.response?.statusCode} - $errorMessage',
+          );
         }
       }
       rethrow;
@@ -144,6 +150,28 @@ class IssueRepository {
       } else {
         throw Exception(
           'Failed to load tickets: ${response.data['message'] ?? 'Unknown error'}',
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> downloadInvoice(int ticketId) async {
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final filePath = '${tempDir.path}/invoice_$ticketId.pdf';
+
+      final response = await apiClient.download(
+        '/customer/tickets/$ticketId/invoice',
+        filePath,
+      );
+
+      if (response.statusCode == 200) {
+        return filePath;
+      } else {
+        throw Exception(
+          'Failed to download invoice: ${response.statusMessage}',
         );
       }
     } catch (e) {

@@ -96,9 +96,7 @@ class _ChatSupportScreenState extends State<ChatSupportScreen> {
           },
           builder: (context, state) {
             if (state is ChatLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const Center(child: CircularProgressIndicator());
             }
 
             if (state is ChatError) {
@@ -106,7 +104,11 @@ class _ChatSupportScreenState extends State<ChatSupportScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                    const Icon(
+                      Icons.error_outline,
+                      size: 48,
+                      color: Colors.red,
+                    ),
                     const SizedBox(height: 16),
                     Text(
                       state.message,
@@ -183,7 +185,8 @@ class _ChatSupportScreenState extends State<ChatSupportScreen> {
                             horizontal: 16,
                             vertical: 16,
                           ),
-                          itemCount: messages.length + (isLoadingMessage ? 1 : 0),
+                          itemCount:
+                              messages.length + (isLoadingMessage ? 1 : 0),
                           itemBuilder: (context, index) {
                             if (index == messages.length && isLoadingMessage) {
                               return _buildLoadingIndicator();
@@ -195,7 +198,10 @@ class _ChatSupportScreenState extends State<ChatSupportScreen> {
                 // Quick Options (only show when no messages or suggested replies available)
                 if (messages.isEmpty || suggestedReplies != null)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     child: Wrap(
                       spacing: 8,
                       runSpacing: 8,
@@ -207,7 +213,7 @@ class _ChatSupportScreenState extends State<ChatSupportScreen> {
                 if (suggestedReplies != null) const SizedBox(height: 8),
                 // Input Field
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
                   child: Row(
                     children: [
                       const Icon(Icons.attach_file, color: Colors.black87),
@@ -238,7 +244,10 @@ class _ChatSupportScreenState extends State<ChatSupportScreen> {
                               ),
                               GestureDetector(
                                 onTap: _sendMessage,
-                                child: const Icon(Icons.send, color: Colors.black),
+                                child: const Icon(
+                                  Icons.send,
+                                  color: Colors.black,
+                                ),
                               ),
                             ],
                           ),

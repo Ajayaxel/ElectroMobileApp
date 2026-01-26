@@ -5,6 +5,7 @@ import 'package:onecharge/logic/blocs/ticket/ticket_state.dart';
 import 'package:onecharge/logic/blocs/ticket/ticket_event.dart';
 import 'package:onecharge/models/ticket_model.dart';
 import 'package:onecharge/screen/home/booking_detail_screen.dart';
+import 'package:intl/intl.dart';
 
 class RecentBookingsScreen extends StatefulWidget {
   const RecentBookingsScreen({super.key});
@@ -48,11 +49,13 @@ class _RecentBookingsScreenState extends State<RecentBookingsScreen> {
         centerTitle: true,
       ),
       body: BlocBuilder<TicketBloc, TicketState>(
+        buildWhen: (previous, current) =>
+            current is TicketListLoading ||
+            current is TicketListLoaded ||
+            current is TicketError,
         builder: (context, state) {
           if (state is TicketListLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (state is TicketListLoaded) {
@@ -61,10 +64,7 @@ class _RecentBookingsScreenState extends State<RecentBookingsScreen> {
               return const Center(
                 child: Text(
                   'No bookings found',
-                  style: TextStyle(
-                    fontFamily: 'Lufga',
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(fontFamily: 'Lufga', fontSize: 16),
                 ),
               );
             }
@@ -72,8 +72,7 @@ class _RecentBookingsScreenState extends State<RecentBookingsScreen> {
             return ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: tickets.length,
-              separatorBuilder: (context, index) =>
-                  const SizedBox(height: 16),
+              separatorBuilder: (context, index) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
                 final ticket = tickets[index];
                 return _buildBookingCard(context, ticket);
@@ -106,18 +105,22 @@ class _RecentBookingsScreenState extends State<RecentBookingsScreen> {
 
   Widget _buildBookingCard(BuildContext context, Ticket ticket) {
     final bookingId = ticket.ticketId;
-    final createdAt = ticket.createdAt;
+    // Show scheduled time for scheduled bookings, creation time for instant
+    String? rawTime = ticket.bookingType == 'scheduled'
+        ? ticket.scheduledAt
+        : ticket.createdAt;
+
     String dateTimeText = '';
-    if (createdAt != null && createdAt.isNotEmpty) {
+    if (rawTime != null && rawTime.isNotEmpty) {
       try {
-        final dt = DateTime.parse(createdAt);
-        final date =
-            '${dt.day.toString().padLeft(2, '0')}-${dt.month.toString().padLeft(2, '0')}-${dt.year}';
-        final time =
-            '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
-        dateTimeText = '$date   $time';
+        String dateStr = rawTime;
+        if (!dateStr.contains('Z') && !dateStr.contains('+')) {
+          dateStr = '${dateStr.replaceFirst(' ', 'T')}Z';
+        }
+        final dt = DateTime.parse(dateStr).toLocal();
+        dateTimeText = DateFormat('dd-MM-yyyy   hh:mm a').format(dt);
       } catch (_) {
-        dateTimeText = createdAt;
+        dateTimeText = rawTime;
       }
     }
 
@@ -149,7 +152,7 @@ class _RecentBookingsScreenState extends State<RecentBookingsScreen> {
           ),
           const SizedBox(height: 4),
           Text(
-            dateTimeText,
+            "$dateTimeText   •   ${ticket.bookingType != null ? (ticket.bookingType![0].toUpperCase() + ticket.bookingType!.substring(1)) : '-'}",
             style: const TextStyle(
               fontSize: 12,
               color: Colors.grey,

@@ -50,6 +50,7 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
   final List<File> _selectedFiles = [];
   OverlayEntry? _toastEntry;
   IssueSubType? _selectedChargeUnit;
+  String _selectedPaymentMethod = "online"; // "online" or "cod"
 
   @override
   void initState() {
@@ -58,15 +59,23 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
       _selectedCategory = widget.initialCategory!.replaceAll('\n', ' ');
     }
     DateTime now = DateTime.now();
-    int minutes = now.minute;
+    // Default to 3 hours gap as requested
+    DateTime scheduledTime = now.add(const Duration(hours: 3));
+    int minutes = scheduledTime.minute;
     if (minutes <= 30) {
-      _selectedDateTime = DateTime(now.year, now.month, now.day, now.hour, 30);
+      _selectedDateTime = DateTime(
+        scheduledTime.year,
+        scheduledTime.month,
+        scheduledTime.day,
+        scheduledTime.hour,
+        30,
+      );
     } else {
       _selectedDateTime = DateTime(
-        now.year,
-        now.month,
-        now.day,
-        now.hour + 1,
+        scheduledTime.year,
+        scheduledTime.month,
+        scheduledTime.day,
+        scheduledTime.hour + 1,
         00,
       );
     }
@@ -128,6 +137,9 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
               );
             },
             child: Container(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width - 40,
+              ),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
                 color: Colors.black.withOpacity(0.9),
@@ -145,13 +157,15 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                 children: [
                   const Icon(Icons.info_outline, color: Colors.white, size: 20),
                   const SizedBox(width: 10),
-                  Text(
-                    message,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'Lufga',
+                  Flexible(
+                    child: Text(
+                      message,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Lufga',
+                      ),
                     ),
                   ),
                 ],
@@ -172,6 +186,37 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
         _toastEntry = null;
       }
     });
+  }
+
+  String _formatErrorMessage(String error) {
+    // If it's a validation error from API
+    if (error.contains('errors:')) {
+      try {
+        // Extract errors object string
+        final startIndex = error.indexOf('errors: {') + 8;
+        final endIndex = error.lastIndexOf('}');
+        if (startIndex > 7 && endIndex > startIndex) {
+          String errorsPart = error.substring(startIndex, endIndex);
+          // Look for [error message]
+          final match = RegExp(r'\[(.*?)\]').firstMatch(errorsPart);
+          if (match != null && match.groupCount >= 1) {
+            return match.group(1) ?? "Validation failed";
+          }
+        }
+      } catch (e) {
+        // Fallback below
+      }
+    }
+
+    // Clean up generic API error prefixes
+    return error
+        .replaceFirst('Exception: ', '')
+        .replaceFirst('API Error: ', '')
+        .split(' - ')
+        .last
+        .replaceAll('{success: false, message: ', '')
+        .split(',')[0]
+        .replaceAll('}', '');
   }
 
   Future<void> _pickMedia() async {
@@ -298,19 +343,23 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
 
   String _formatCategoryName(String name) {
     // Handle special cases for better formatting
-    if (name.toLowerCase().contains('tow') && name.toLowerCase().contains('pickup')) {
+    if (name.toLowerCase().contains('tow') &&
+        name.toLowerCase().contains('pickup')) {
       return 'Tow / Pickup\nRequired';
     }
-    if (name.toLowerCase().contains('charging') && name.toLowerCase().contains('station')) {
+    if (name.toLowerCase().contains('charging') &&
+        name.toLowerCase().contains('station')) {
       return 'Charging\nStation';
     }
-    if (name.toLowerCase().contains('low') && name.toLowerCase().contains('battery')) {
+    if (name.toLowerCase().contains('low') &&
+        name.toLowerCase().contains('battery')) {
       return 'Low\nBattery';
     }
     if (name.toLowerCase().contains('mechanical')) {
       return 'Mechanical\nIssue';
     }
-    if (name.toLowerCase().contains('flat') && name.toLowerCase().contains('tyre')) {
+    if (name.toLowerCase().contains('flat') &&
+        name.toLowerCase().contains('tyre')) {
       return 'Flat\nTyre';
     }
     // For other names, try to split at reasonable points
@@ -407,7 +456,7 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                         const Duration(minutes: 1),
                       ),
                       onDateTimeChanged: (DateTime newDate) {
-                        tempDate = newDate; 
+                        tempDate = newDate;
                       },
                     ),
                   ),
@@ -467,7 +516,10 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                         GestureDetector(
                           onTap: () {
                             final now = DateTime.now();
-                            final selected = DateTime(
+                            final minAllowed = now.add(
+                              const Duration(hours: 3),
+                            );
+                            DateTime selected = DateTime(
                               _selectedDateTime.year,
                               _selectedDateTime.month,
                               _selectedDateTime.day,
@@ -475,9 +527,37 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                               tempTime.minute,
                             );
 
-                            if (selected.isBefore(now)) {
-                              _showToast("Please select a future time");
-                              return;
+                            // If selected time is in the past or before the 3-hour window on the same day
+                            if (selected.isBefore(minAllowed)) {
+                              // If it's today, we snap it to the minAllowed rounded up
+                              if (selected.year == now.year &&
+                                  selected.month == now.month &&
+                                  selected.day == now.day) {
+                                int minutes = minAllowed.minute;
+                                if (minutes <= 30) {
+                                  selected = DateTime(
+                                    minAllowed.year,
+                                    minAllowed.month,
+                                    minAllowed.day,
+                                    minAllowed.hour,
+                                    30,
+                                  );
+                                } else {
+                                  selected = DateTime(
+                                    minAllowed.year,
+                                    minAllowed.month,
+                                    minAllowed.day,
+                                    minAllowed.hour + 1,
+                                    00,
+                                  );
+                                }
+                                _showToast(
+                                  "Minimum 3 hours gap required. Adjusted to nearest slot.",
+                                );
+                              } else if (selected.isBefore(now)) {
+                                _showToast("Please select a future time");
+                                return;
+                              }
                             }
 
                             setState(() {
@@ -607,10 +687,12 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                               .toList();
 
                           // Set initial category if not set
-                          if (_selectedCategoryObj == null && categories.isNotEmpty) {
+                          if (_selectedCategoryObj == null &&
+                              categories.isNotEmpty) {
                             final initialCat = widget.initialCategory != null
                                 ? categories.firstWhere(
-                                    (c) => c.name?.toLowerCase() ==
+                                    (c) =>
+                                        c.name?.toLowerCase() ==
                                         widget.initialCategory!
                                             .toLowerCase()
                                             .replaceAll('\n', ' '),
@@ -622,7 +704,8 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                                 _selectedCategoryObj = initialCat;
                                 _selectedCategory = initialCat.name ?? '';
                                 if (initialCat.subTypes.isNotEmpty) {
-                                  _selectedChargeUnit = initialCat.subTypes.first;
+                                  _selectedChargeUnit =
+                                      initialCat.subTypes.first;
                                 }
                               });
                             });
@@ -633,14 +716,16 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                             child: Row(
                               children: categories.map((cat) {
                                 final categoryName = cat.name ?? '';
-                                final isSelected = _selectedCategory == categoryName;
+                                final isSelected =
+                                    _selectedCategory == categoryName;
                                 return GestureDetector(
                                   onTap: () {
                                     setState(() {
                                       _selectedCategory = categoryName;
                                       _selectedCategoryObj = cat;
                                       if (cat.subTypes.isNotEmpty) {
-                                        _selectedChargeUnit = cat.subTypes.first;
+                                        _selectedChargeUnit =
+                                            cat.subTypes.first;
                                       } else {
                                         _selectedChargeUnit = null;
                                       }
@@ -658,7 +743,8 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
@@ -784,24 +870,7 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                       width: double.infinity,
                       height: 52,
                       child: OutlinedButton(
-                        onPressed: () {
-                          // Close the Issue Reporting sheet first
-                          Navigator.pop(context);
-
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) => PaymentBottomSheet(
-                              vehicleName: widget.vehicleName,
-                              vehiclePlate: widget.vehiclePlate,
-                              locationAddress: _currentAddress,
-                              locationCity: "",
-                              date: "Today",
-                              time: "Instant",
-                            ),
-                          );
-                        },
+                        onPressed: () => _submitTicket(isInstant: true),
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(
                             color: Colors.black,
@@ -851,7 +920,8 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                         itemCount: _selectedCategoryObj!.subTypes.length,
                         itemBuilder: (context, index) {
                           final subType = _selectedCategoryObj!.subTypes[index];
-                          final isSelected = _selectedChargeUnit?.id == subType.id;
+                          final isSelected =
+                              _selectedChargeUnit?.id == subType.id;
                           return _buildChargeUnitCard(subType, isSelected);
                         },
                       ),
@@ -881,7 +951,8 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                           child: TextField(
                             controller: _issueController,
                             decoration: const InputDecoration(
-                              hintText: "Type your issue (Required for Other category)",
+                              hintText:
+                                  "Type your issue (Required for Other category)",
                               hintStyle: TextStyle(
                                 color: Color(0xFFBDBDBD),
                                 fontFamily: 'Lufga',
@@ -917,7 +988,8 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: _selectedCategoryObj?.id == 6 &&
+                            color:
+                                _selectedCategoryObj?.id == 6 &&
                                     _issueController.text.trim().isEmpty
                                 ? Colors.red
                                 : const Color(0xFFE0E0E0),
@@ -1081,6 +1153,8 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                     ],
                     const SizedBox(height: 16),
 
+                    const SizedBox(height: 16),
+
                     const Text(
                       "Select Slot",
                       style: TextStyle(
@@ -1119,6 +1193,138 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 16),
+
+                    // Payment Method Selection
+                    const Text(
+                      "Payment Method",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Lufga',
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Pay by cash
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedPaymentMethod = "cod";
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF5F5F5),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            const Text(
+                              "Pay by cash",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Lufga',
+                                color: Colors.black,
+                              ),
+                            ),
+                            const Spacer(),
+                            // Radio Button
+                            Container(
+                              width: 24,
+                              height: 24,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: _selectedPaymentMethod == "cod"
+                                      ? Colors.black
+                                      : const Color(0xFFD0D0D0),
+                                  width: 2,
+                                ),
+                              ),
+                              child: _selectedPaymentMethod == "cod"
+                                  ? Center(
+                                      child: Container(
+                                        width: 12,
+                                        height: 12,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    )
+                                  : null,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Online payment
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedPaymentMethod = "online";
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF5F5F5),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            const Text(
+                              "online payment",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Lufga',
+                                color: Colors.black,
+                              ),
+                            ),
+                            const Spacer(),
+                            // Radio Button
+                            Container(
+                              width: 24,
+                              height: 24,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: _selectedPaymentMethod == "online"
+                                      ? Colors.black
+                                      : const Color(0xFFD0D0D0),
+                                  width: 2,
+                                ),
+                              ),
+                              child: _selectedPaymentMethod == "online"
+                                  ? Center(
+                                      child: Container(
+                                        width: 12,
+                                        height: 12,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    )
+                                  : null,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 32),
 
                     BlocListener<TicketBloc, TicketState>(
@@ -1126,7 +1332,7 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                         if (state is TicketSuccess) {
                           final requiresPayment =
                               state.response.data?.paymentRequired == true &&
-                                  state.response.data?.paymentUrl != null;
+                              state.response.data?.paymentUrl != null;
 
                           if (requiresPayment) {
                             // Close the issue reporting sheet first
@@ -1142,8 +1348,20 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                                 vehiclePlate: widget.vehiclePlate,
                                 locationAddress: _currentAddress,
                                 locationCity: "",
-                                date: "Today",
-                                time: _slotController.text,
+                                date:
+                                    state.response.data?.ticket?.bookingType ==
+                                        "instant"
+                                    ? "Today"
+                                    : DateFormat(
+                                        'MMM dd',
+                                      ).format(_selectedDateTime),
+                                time:
+                                    state.response.data?.ticket?.bookingType ==
+                                        "instant"
+                                    ? "Instant"
+                                    : DateFormat(
+                                        'hh:mm a',
+                                      ).format(_selectedDateTime),
                                 paymentBreakdown:
                                     state.response.data?.paymentBreakdown,
                                 paymentUrl: state.response.data?.paymentUrl,
@@ -1151,14 +1369,32 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                               ),
                             );
                           } else {
-                            // No payment: return to home and show service notification flow
+                            // No online payment required (e.g., COD or Free)
+                            final breakdown =
+                                state.response.data?.paymentBreakdown;
+                            final invoice =
+                                state.response.data?.ticket?.invoice;
+                            final totalAmount =
+                                breakdown?.totalAmount ?? invoice?.totalAmount;
+
+                            if (totalAmount != null && totalAmount > 0) {
+                              final currency =
+                                  breakdown?.currency ??
+                                  invoice?.currency ??
+                                  "AED";
+                              HomeScreenState.activeState?.showToast(
+                                "Ticket created successfully! Total Amount: ${totalAmount.toStringAsFixed(2)} $currency",
+                              );
+                            }
+
+                            // Return to home and show service notification flow
                             HomeScreenState.activeState?.startServiceFlow(
                               ticket: state.response.data?.ticket,
                             );
                             Navigator.pop(context);
                           }
                         } else if (state is TicketError) {
-                          _showToast("Error: ${state.message}");
+                          _showToast(_formatErrorMessage(state.message));
                         }
                       },
                       child: BlocBuilder<TicketBloc, TicketState>(
@@ -1167,75 +1403,7 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
                             onPressed: ticketState is TicketLoading
                                 ? null
                                 : () async {
-                                    // Validation
-                                    if (_slotController.text.isEmpty) {
-                                      _showToast("Please select a Slot");
-                                      return;
-                                    }
-
-                                    // Check if "Other" category requires description
-                                    if (_selectedCategoryObj?.id == 6) {
-                                      if (_issueController.text.trim().isEmpty) {
-                                        _showToast(
-                                          "Please provide a description for 'Other' category",
-                                        );
-                                        return;
-                                      }
-                                      if (_selectedFiles.isEmpty) {
-                                        _showToast(
-                                          "Please upload issue images for 'Other' category",
-                                        );
-                                        return;
-                                      }
-                                    }
-
-                                    // Validate submodel if category has subTypes
-                                    if (_selectedCategoryObj != null &&
-                                        _selectedCategoryObj!.subTypes.isNotEmpty &&
-                                        _selectedChargeUnit == null) {
-                                      _showToast("Please select a charge unit");
-                                      return;
-                                    }
-
-                                    // Get vehicle IDs from storage
-                                    final vehicleTypeId =
-                                        await VehicleStorage.getVehicleTypeId();
-                                    final brandId =
-                                        await VehicleStorage.getBrandId();
-                                    final modelId =
-                                        await VehicleStorage.getModelId();
-
-                                    // Validate that all required IDs are present
-                                    if (vehicleTypeId == null || brandId == null || modelId == null) {
-                                      _showToast("Vehicle information is incomplete. Please select a vehicle again.");
-                                      return;
-                                    }
-
-                                    // Create ticket request
-                                    final request = CreateTicketRequest(
-                                      issueCategoryId: _selectedCategoryObj?.id ?? 1,
-                                      issueCategorySubTypeId:
-                                          _selectedChargeUnit?.id,
-                                      vehicleTypeId: vehicleTypeId,
-                                      brandId: brandId,
-                                      modelId: modelId,
-                                      numberPlate: widget.vehiclePlate,
-                                      description: _issueController.text.trim().isNotEmpty
-                                          ? _issueController.text.trim()
-                                          : null,
-                                      location: _currentAddress,
-                                      latitude: _currentLatitude,
-                                      longitude: _currentLongitude,
-                                      attachments: _selectedFiles.isNotEmpty
-                                          ? _selectedFiles
-                                          : null,
-                                      redeemCode: null, // Can be added later if needed
-                                    );
-
-                                    // Dispatch create ticket event
-                                    context.read<TicketBloc>().add(
-                                          CreateTicketRequested(request),
-                                        );
+                                    _submitTicket(isInstant: false);
                                   },
                             text: ticketState is TicketLoading
                                 ? "Submitting..."
@@ -1252,6 +1420,75 @@ class _IssueReportingBottomSheetState extends State<IssueReportingBottomSheet> {
         ),
       ),
     );
+  }
+
+  Future<void> _submitTicket({required bool isInstant}) async {
+    // Validation
+    if (!isInstant && _slotController.text.isEmpty) {
+      _showToast("Please select a Slot");
+      return;
+    }
+
+    // Check if "Other" category requires description
+    if (_selectedCategoryObj?.id == 6) {
+      if (_issueController.text.trim().isEmpty) {
+        _showToast("Please provide a description for 'Other' category");
+        return;
+      }
+      if (_selectedFiles.isEmpty) {
+        _showToast("Please upload issue images for 'Other' category");
+        return;
+      }
+    }
+
+    // Validate submodel if category has subTypes
+    if (_selectedCategoryObj != null &&
+        _selectedCategoryObj!.subTypes.isNotEmpty &&
+        _selectedChargeUnit == null) {
+      _showToast("Please select a charge unit");
+      return;
+    }
+
+    // Get vehicle IDs from storage
+    final vehicleTypeId = await VehicleStorage.getVehicleTypeId();
+    final brandId = await VehicleStorage.getBrandId();
+    final modelId = await VehicleStorage.getModelId();
+
+    // Validate that all required IDs are present
+    if (vehicleTypeId == null || brandId == null || modelId == null) {
+      _showToast(
+        "Vehicle information is incomplete. Please select a vehicle again.",
+      );
+      return;
+    }
+
+    // Create ticket request
+    final request = CreateTicketRequest(
+      issueCategoryId: _selectedCategoryObj?.id ?? 1,
+      issueCategorySubTypeId: _selectedChargeUnit?.id,
+      vehicleTypeId: vehicleTypeId,
+      brandId: brandId,
+      modelId: modelId,
+      numberPlate: widget.vehiclePlate,
+      description: _issueController.text.trim().isNotEmpty
+          ? _issueController.text.trim()
+          : null,
+      location: _currentAddress,
+      latitude: _currentLatitude,
+      longitude: _currentLongitude,
+      attachments: _selectedFiles.isNotEmpty ? _selectedFiles : null,
+      redeemCode: null, // Can be added later if needed
+      paymentMethod: _selectedPaymentMethod == "cod" ? "cod" : null,
+      bookingType: isInstant ? "instant" : "scheduled",
+      scheduledAt: isInstant
+          ? DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now().toUtc())
+          : DateFormat('yyyy-MM-dd HH:mm:ss').format(_selectedDateTime.toUtc()),
+    );
+
+    // Dispatch create ticket event
+    if (mounted) {
+      context.read<TicketBloc>().add(CreateTicketRequested(request));
+    }
   }
 
   Widget _buildChargeUnitCard(IssueSubType subType, bool isSelected) {

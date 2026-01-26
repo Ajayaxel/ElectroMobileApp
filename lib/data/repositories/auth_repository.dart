@@ -16,7 +16,21 @@ class AuthRepository {
         return LoginResponse.fromJson(response.data['data']);
       } else {
         throw Exception(
-            'Login failed: ${response.data['message'] ?? 'Unknown error'}');
+          'Login failed: ${response.data['message'] ?? 'Unknown error'}',
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      final response = await apiClient.post('/customer/logout');
+      if (response.data['success'] != true) {
+        throw Exception(
+          'Logout failed: ${response.data['message'] ?? 'Unknown error'}',
+        );
       }
     } catch (e) {
       rethrow;

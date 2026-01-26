@@ -29,14 +29,18 @@ class ApiClient {
               options.headers['Authorization'] = 'Bearer $token';
               print('🔑 [ApiClient] Token added to request: ${options.path}');
             } else {
-              print('⚠️ [ApiClient] No token found for request: ${options.path}');
+              print(
+                '⚠️ [ApiClient] No token found for request: ${options.path}',
+              );
             }
           }
           return handler.next(options);
         },
         onError: (error, handler) {
           if (error.response?.statusCode == 401) {
-            print('❌ [ApiClient] Unauthenticated - Token may be invalid or expired');
+            print(
+              '❌ [ApiClient] Unauthenticated - Token may be invalid or expired',
+            );
           }
           return handler.next(error);
         },
@@ -81,7 +85,11 @@ class ApiClient {
               ),
             )
           : _dio;
-      final response = await dio.post(path, data: data, queryParameters: queryParameters);
+      final response = await dio.post(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+      );
       return response;
     } on DioException catch (e) {
       throw _handleError(e);
@@ -112,6 +120,23 @@ class ApiClient {
     }
   }
 
+  Future<Response> download(
+    String path,
+    String savePath, {
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    try {
+      final response = await _dio.download(
+        path,
+        savePath,
+        queryParameters: queryParameters,
+      );
+      return response;
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
   Future<Response> postMultipart(
     String path, {
     required FormData formData,
@@ -119,9 +144,7 @@ class ApiClient {
     try {
       // Get token for multipart request
       final token = await TokenStorage.readToken();
-      final headers = <String, dynamic>{
-        'Accept': 'application/json',
-      };
+      final headers = <String, dynamic>{'Accept': 'application/json'};
       if (token != null && token.isNotEmpty) {
         headers['Authorization'] = 'Bearer $token';
       }
@@ -129,10 +152,7 @@ class ApiClient {
       final response = await _dio.post(
         path,
         data: formData,
-        options: Options(
-          headers: headers,
-          contentType: 'multipart/form-data',
-        ),
+        options: Options(headers: headers, contentType: 'multipart/form-data'),
       );
       return response;
     } on DioException catch (e) {
@@ -142,9 +162,26 @@ class ApiClient {
 
   Exception _handleError(DioException e) {
     if (e.response != null) {
-      return Exception(
-        'API Error: ${e.response?.statusCode} - ${e.response?.data}',
-      );
+      final data = e.response?.data;
+      String message = 'API Error: ${e.response?.statusCode}';
+
+      if (data is Map) {
+        if (data.containsKey('errors')) {
+          final errors = data['errors'];
+          if (errors is Map && errors.isNotEmpty) {
+            final firstError = errors.values.first;
+            if (firstError is List && firstError.isNotEmpty) {
+              message = firstError.first.toString();
+            } else {
+              message = firstError.toString();
+            }
+          }
+        } else if (data.containsKey('message')) {
+          message = data['message'].toString();
+        }
+      }
+
+      return Exception(message);
     } else {
       return Exception('Connection Error: ${e.message}');
     }

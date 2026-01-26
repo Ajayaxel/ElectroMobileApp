@@ -7,6 +7,12 @@ import 'package:onecharge/screen/home/my_location_screen.dart';
 import 'package:onecharge/screen/home/my_vehicle_screen.dart';
 import 'package:onecharge/screen/home/profile_screen.dart';
 import 'package:onecharge/screen/home/recent_bookings_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:onecharge/logic/blocs/auth/auth_bloc.dart';
+import 'package:onecharge/logic/blocs/auth/auth_event.dart';
+import 'package:onecharge/logic/blocs/auth/auth_state.dart';
+import 'package:onecharge/screen/login/phone_login.dart';
+import 'package:onecharge/test/testlogin.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -208,49 +214,76 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onTap: () {
                 showCupertinoDialog(
                   context: context,
-                  builder: (context) => CupertinoAlertDialog(
-                    title: const Text(
-                      'Log Out',
-                      style: TextStyle(
-                        fontFamily: 'Lufga',
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    content: const Text(
-                      'Are you sure you want to log out from\nthe application?',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontFamily: 'Lufga',
-                        color: Color(0xff636363),
-                      ),
-                    ),
-                    actions: [
-                      CupertinoDialogAction(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text(
-                          'Cancel',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontFamily: 'Lufga',
+                  builder: (context) => BlocListener<AuthBloc, AuthState>(
+                    listener: (context, state) {
+                      if (state is AuthLoggedOut) {
+                        // Close dialog
+                        Navigator.pop(context);
+                        // Navigate to login (assuming we want to go back to splash or login)
+                        // For now let's just push replacement to PhoneLogin
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Testlogin(),
                           ),
+                          (route) => false,
+                        );
+                      } else if (state is AuthError) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(state.message)));
+                      }
+                    },
+                    child: CupertinoAlertDialog(
+                      title: const Text(
+                        'Log Out',
+                        style: TextStyle(
+                          fontFamily: 'Lufga',
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
-                      CupertinoDialogAction(
-                        isDestructiveAction: true,
-                        onPressed: () {
-                          // TODO: Implement actual logout
-                          Navigator.pop(context);
-                        },
-                        child: const Text(
-                          'Log Out',
-                          style: TextStyle(
-                            color: Color(0xffFF0000),
-                            fontFamily: 'Lufga',
-                            fontWeight: FontWeight.w700,
-                          ),
+                      content: const Text(
+                        'Are you sure you want to log out from\nthe application?',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'Lufga',
+                          color: Color(0xff636363),
                         ),
                       ),
-                    ],
+                      actions: [
+                        CupertinoDialogAction(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontFamily: 'Lufga',
+                            ),
+                          ),
+                        ),
+                        CupertinoDialogAction(
+                          isDestructiveAction: true,
+                          onPressed: () {
+                            context.read<AuthBloc>().add(LogoutRequested());
+                          },
+                          child: BlocBuilder<AuthBloc, AuthState>(
+                            builder: (context, state) {
+                              if (state is AuthLoading) {
+                                return const CupertinoActivityIndicator();
+                              }
+                              return const Text(
+                                'Log Out',
+                                style: TextStyle(
+                                  color: Color(0xffFF0000),
+                                  fontFamily: 'Lufga',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },

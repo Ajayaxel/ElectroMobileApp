@@ -16,3 +16,5 @@ class LoginRequested extends AuthEvent {
   @override
   List<Object> get props => [loginRequest];
 }
+
+class LogoutRequested extends AuthEvent {}

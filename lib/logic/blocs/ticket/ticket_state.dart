@@ -51,3 +51,23 @@ class TicketDetailSuccess extends TicketState {
   @override
   List<Object> get props => [ticket];
 }
+
+class InvoiceDownloadLoading extends TicketState {}
+
+class InvoiceDownloadSuccess extends TicketState {
+  final String filePath;
+
+  const InvoiceDownloadSuccess(this.filePath);
+
+  @override
+  List<Object> get props => [filePath];
+}
+
+class InvoiceDownloadError extends TicketState {
+  final String message;
+
+  const InvoiceDownloadError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

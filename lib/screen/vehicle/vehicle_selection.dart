@@ -53,14 +53,48 @@ class _VehicleSelectionState extends State<VehicleSelection> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Title
-                      const Center(
-                        child: Text(
-                          "Select your vehicle",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            const Text(
+                              "Select your vehicle",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                              ),
+                            ),
+                            Positioned(
+                              right: 0,
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const HomeScreen(),
+                                    ),
+                                  );
+                                },
+                                child: const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 4,
+                                  ),
+                                  child: Text(
+                                    "skip",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -144,7 +178,8 @@ class _VehicleSelectionState extends State<VehicleSelection> {
                                             height: 14,
                                             decoration: BoxDecoration(
                                               color: Colors.white,
-                                              borderRadius: BorderRadius.circular(4),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
                                             ),
                                           ),
                                         ],
@@ -376,19 +411,25 @@ class _VehicleSelectionState extends State<VehicleSelection> {
                                 },
                             child: (state is VehicleModelLoading)
                                 ? Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 20),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 20,
+                                    ),
                                     child: Column(
                                       children: List.generate(3, (index) {
                                         return Padding(
-                                          padding: const EdgeInsets.only(bottom: 16),
+                                          padding: const EdgeInsets.only(
+                                            bottom: 16,
+                                          ),
                                           child: Shimmer.fromColors(
                                             baseColor: Colors.grey.shade300,
-                                            highlightColor: Colors.grey.shade100,
+                                            highlightColor:
+                                                Colors.grey.shade100,
                                             child: Container(
                                               height: 141,
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
-                                                borderRadius: BorderRadius.circular(6),
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
                                               ),
                                             ),
                                           ),
@@ -680,18 +721,27 @@ class _VehicleSelectionState extends State<VehicleSelection> {
                               value: selectedChargingType,
                               decoration: InputDecoration(
                                 hintText: "Charging Type",
-                                hintStyle: TextStyle(color: Colors.grey.shade400),
+                                hintStyle: TextStyle(
+                                  color: Colors.grey.shade400,
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade300,
+                                  ),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade300,
+                                  ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
-                                  borderSide: const BorderSide(color: Colors.black, width: 1.5),
+                                  borderSide: const BorderSide(
+                                    color: Colors.black,
+                                    width: 1.5,
+                                  ),
                                 ),
                                 contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 20,
@@ -702,9 +752,13 @@ class _VehicleSelectionState extends State<VehicleSelection> {
                               ),
                               dropdownColor: Colors.white,
                               selectedItemBuilder: (BuildContext context) {
-                                return state.chargingTypes.map<Widget>((ChargingType chargingType) {
+                                return state.chargingTypes.map<Widget>((
+                                  ChargingType chargingType,
+                                ) {
                                   return Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 5,
+                                    ),
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
@@ -722,7 +776,9 @@ class _VehicleSelectionState extends State<VehicleSelection> {
                                 return DropdownMenuItem<ChargingType>(
                                   value: chargingType,
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 7),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 7,
+                                    ),
                                     child: Text(
                                       chargingType.name,
                                       style: const TextStyle(
@@ -795,13 +851,15 @@ class _VehicleSelectionState extends State<VehicleSelection> {
                         onPressed: addVehicleState is AddVehicleLoading
                             ? null
                             : () {
-                                final vehicleNumber =
-                                    vehicleNumberController.text.trim();
+                                final vehicleNumber = vehicleNumberController
+                                    .text
+                                    .trim();
                                 if (vehicleNumber.isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                      content:
-                                          Text('Please enter your vehicle number.'),
+                                      content: Text(
+                                        'Please enter your vehicle number.',
+                                      ),
                                     ),
                                   );
                                   return;
@@ -809,7 +867,9 @@ class _VehicleSelectionState extends State<VehicleSelection> {
                                 if (selectedChargingType == null) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                      content: Text('Please select a charging type.'),
+                                      content: Text(
+                                        'Please select a charging type.',
+                                      ),
                                     ),
                                   );
                                   return;
@@ -827,17 +887,23 @@ class _VehicleSelectionState extends State<VehicleSelection> {
                                 }
 
                                 // Get vehicle type ID and brand ID from selected brand
-                                final brandState = context.read<BrandBloc>().state;
+                                final brandState = context
+                                    .read<BrandBloc>()
+                                    .state;
                                 int vehicleTypeId = 1; // Default to Car
-                                int brandId = currentVehicle.brandId; // Use vehicle's brand ID
-                                
-                                if (brandState is BrandLoaded && brandState.brands.isNotEmpty) {
+                                int brandId = currentVehicle
+                                    .brandId; // Use vehicle's brand ID
+
+                                if (brandState is BrandLoaded &&
+                                    brandState.brands.isNotEmpty) {
                                   try {
                                     final selectedBrandData = brandState.brands
                                         .firstWhere(
-                                          (brand) => brand.name == selectedBrand,
+                                          (brand) =>
+                                              brand.name == selectedBrand,
                                         );
-                                    vehicleTypeId = selectedBrandData.vehicleTypeId;
+                                    vehicleTypeId =
+                                        selectedBrandData.vehicleTypeId;
                                     brandId = selectedBrandData.id;
                                   } catch (e) {
                                     // If brand not found, use first brand as fallback
@@ -858,12 +924,15 @@ class _VehicleSelectionState extends State<VehicleSelection> {
 
                                 // Dispatch add vehicle event
                                 context.read<AddVehicleBloc>().add(
-                                      AddVehicleRequested(request),
-                                    );
-                                
+                                  AddVehicleRequested(request),
+                                );
+
                                 // Show loading bottom sheet
                                 Navigator.of(context).pop();
-                                _showSuccessBottomSheet(vehicleNumber, selectedChargingType!);
+                                _showSuccessBottomSheet(
+                                  vehicleNumber,
+                                  selectedChargingType!,
+                                );
                               },
                       );
                     },
@@ -891,7 +960,9 @@ class _VehicleSelectionState extends State<VehicleSelection> {
   }
 
   void _showSuccessBottomSheet(
-      String vehicleNumber, ChargingType chargingType) {
+    String vehicleNumber,
+    ChargingType chargingType,
+  ) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -945,7 +1016,10 @@ class _VehicleSelectionState extends State<VehicleSelection> {
                             const Text(
                               "Adding your vehicle...",
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 16, color: Colors.black),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
                             ),
                           ],
                         );
@@ -963,7 +1037,9 @@ class _VehicleSelectionState extends State<VehicleSelection> {
   }
 
   void _showFinalSuccessBottomSheet(
-      String vehicleNumber, AddVehicleResponse response) {
+    String vehicleNumber,
+    AddVehicleResponse response,
+  ) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
