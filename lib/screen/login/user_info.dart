@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:onecharge/const/onebtn.dart';
-import 'package:onecharge/screen/vehicle/vehicle_selection.dart';
+import 'package:electro/const/onebtn.dart';
+import 'package:electro/screen/vehicle/vehicle_selection.dart';
 
 class UserInfo extends StatefulWidget {
   const UserInfo({super.key});

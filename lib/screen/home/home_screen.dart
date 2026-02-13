@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:onecharge/screen/home/issue_reporting_bottom_sheet.dart';
-import 'package:onecharge/screen/home/widgets/service_notification.dart';
-import 'package:onecharge/screen/home/widgets/service_summary_bottom_sheet.dart';
-import 'package:onecharge/screen/home/settings_screen.dart';
-import 'package:onecharge/screen/home/tracking_map_screen.dart';
-import 'package:onecharge/screen/vehicle/vehicle_selection.dart';
-import 'package:onecharge/const/onebtn.dart';
+import 'package:electro/screen/home/issue_reporting_bottom_sheet.dart';
+import 'package:electro/screen/home/widgets/service_notification.dart';
+import 'package:electro/screen/home/widgets/service_summary_bottom_sheet.dart';
+import 'package:electro/screen/home/settings_screen.dart';
+import 'package:electro/screen/home/tracking_map_screen.dart';
+import 'package:electro/screen/vehicle/vehicle_selection.dart';
+import 'package:electro/const/onebtn.dart';
 import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:onecharge/logic/blocs/issue_category/issue_category_bloc.dart';
-import 'package:onecharge/logic/blocs/issue_category/issue_category_state.dart';
-import 'package:onecharge/logic/blocs/auth/auth_bloc.dart';
-import 'package:onecharge/logic/blocs/auth/auth_state.dart';
-import 'package:onecharge/logic/blocs/vehicle_list/vehicle_list_bloc.dart';
-import 'package:onecharge/logic/blocs/vehicle_list/vehicle_list_state.dart';
-import 'package:onecharge/logic/blocs/vehicle_list/vehicle_list_event.dart';
-import 'package:onecharge/models/vehicle_list_model.dart';
-import 'package:onecharge/models/ticket_model.dart';
-import 'package:onecharge/core/storage/vehicle_storage.dart';
+import 'package:electro/logic/blocs/issue_category/issue_category_bloc.dart';
+import 'package:electro/logic/blocs/issue_category/issue_category_state.dart';
+import 'package:electro/logic/blocs/auth/auth_bloc.dart';
+import 'package:electro/logic/blocs/auth/auth_state.dart';
+import 'package:electro/logic/blocs/vehicle_list/vehicle_list_bloc.dart';
+import 'package:electro/logic/blocs/vehicle_list/vehicle_list_state.dart';
+import 'package:electro/logic/blocs/vehicle_list/vehicle_list_event.dart';
+import 'package:electro/models/vehicle_list_model.dart';
+import 'package:electro/models/ticket_model.dart';
+import 'package:electro/core/storage/vehicle_storage.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:onecharge/screen/notification/notification_screen.dart';
-import 'package:onecharge/core/storage/token_storage.dart';
-import 'package:onecharge/screen/home/my_location_screen.dart';
-import 'package:onecharge/models/location_model.dart';
-import 'package:onecharge/logic/blocs/location/location_bloc.dart';
-import 'package:onecharge/logic/blocs/location/location_state.dart';
+import 'package:electro/screen/notification/notification_screen.dart';
+import 'package:electro/core/storage/token_storage.dart';
+import 'package:electro/screen/home/my_location_screen.dart';
+import 'package:electro/models/location_model.dart';
+import 'package:electro/logic/blocs/location/location_bloc.dart';
+import 'package:electro/logic/blocs/location/location_state.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -166,6 +166,7 @@ class HomeScreenState extends State<HomeScreen> {
       builder: (context) => Positioned(
         top: MediaQuery.of(context).padding.top + 20,
         right: 20,
+        left: 20,
         child: Material(
           color: Colors.transparent,
           child: TweenAnimationBuilder<double>(

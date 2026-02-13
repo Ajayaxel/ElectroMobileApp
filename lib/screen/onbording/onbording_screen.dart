@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:onecharge/const/onebtn.dart';
-import 'package:onecharge/resources/app_resources.dart';
-import 'package:onecharge/test/testlogin.dart';
-import 'package:onecharge/utils/onboarding_service.dart';
+import 'package:electro/const/onebtn.dart';
+import 'package:electro/resources/app_resources.dart';
+import 'package:electro/test/testlogin.dart';
+import 'package:electro/utils/onboarding_service.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -19,7 +19,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     OnboardingPageData(
       title: "Discover",
       description:
-          "From low battery to flat tyres — OneCharge\ngets you moving again, fast.",
+          "From low battery to flat tyres — Electro\ngets you moving again, fast.",
       image: AppOnbordImages.onbord1,
     ),
     OnboardingPageData(
@@ -88,7 +88,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   SizedBox(height: isSmallScreen ? 12 : 16),
                   Text(
-                    "OneCharge delivers quick, reliable EV support\nanytime you need it.",
+                    "Electro delivers quick, reliable EV support\nanytime you need it.",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: isSmallScreen ? 12 : 14,

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:onecharge/core/storage/token_storage.dart';
+import 'package:electro/core/storage/token_storage.dart';
 
-import 'package:onecharge/core/storage/vehicle_storage.dart';
-import 'package:onecharge/screen/home/home_screen.dart';
-import 'package:onecharge/screen/onbording/onbording_screen.dart';
-import 'package:onecharge/screen/vehicle/vehicle_selection.dart';
-import 'package:onecharge/test/testlogin.dart';
-import 'package:onecharge/utils/onboarding_service.dart';
-import 'package:onecharge/core/network/api_client.dart';
-import 'package:onecharge/data/repositories/vehicle_repository.dart';
+import 'package:electro/core/storage/vehicle_storage.dart';
+import 'package:electro/screen/home/home_screen.dart';
+import 'package:electro/screen/onbording/onbording_screen.dart';
+import 'package:electro/screen/vehicle/vehicle_selection.dart';
+import 'package:electro/test/testlogin.dart';
+import 'package:electro/utils/onboarding_service.dart';
+import 'package:electro/core/network/api_client.dart';
+import 'package:electro/data/repositories/vehicle_repository.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -149,7 +149,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Image.asset("assets/onbord/spalsh.png")),
+      body: Center(
+        child: Image.asset(
+          "assets/onbord/spalsh.png",
+          width: 280,
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 }

@@ -1,5 +1,5 @@
-import 'package:onecharge/core/network/api_client.dart';
-import 'package:onecharge/models/brand_model.dart';
+import 'package:electro/core/network/api_client.dart';
+import 'package:electro/models/brand_model.dart';
 
 class BrandRepository {
   final ApiClient apiClient;

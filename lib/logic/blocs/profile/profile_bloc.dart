@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:onecharge/data/repositories/profile_repository.dart';
-import 'package:onecharge/logic/blocs/profile/profile_event.dart';
-import 'package:onecharge/logic/blocs/profile/profile_state.dart';
+import 'package:electro/data/repositories/profile_repository.dart';
+import 'package:electro/logic/blocs/profile/profile_event.dart';
+import 'package:electro/logic/blocs/profile/profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository profileRepository;

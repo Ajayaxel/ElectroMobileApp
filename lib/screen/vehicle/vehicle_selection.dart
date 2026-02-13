@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:onecharge/const/onebtn.dart';
-import 'package:onecharge/core/storage/vehicle_storage.dart';
-import 'package:onecharge/logic/blocs/brand/brand_bloc.dart';
-import 'package:onecharge/logic/blocs/brand/brand_state.dart';
-import 'package:onecharge/logic/blocs/vehicle_model/vehicle_model_bloc.dart';
-import 'package:onecharge/logic/blocs/vehicle_model/vehicle_model_state.dart';
-import 'package:onecharge/logic/blocs/charging_type/charging_type_bloc.dart';
-import 'package:onecharge/logic/blocs/charging_type/charging_type_state.dart';
-import 'package:onecharge/models/vehicle_model.dart';
-import 'package:onecharge/models/charging_type_model.dart';
-import 'package:onecharge/models/add_vehicle_model.dart';
-import 'package:onecharge/logic/blocs/add_vehicle/add_vehicle_bloc.dart';
-import 'package:onecharge/logic/blocs/add_vehicle/add_vehicle_event.dart';
-import 'package:onecharge/logic/blocs/add_vehicle/add_vehicle_state.dart';
-import 'package:onecharge/screen/home/home_screen.dart';
+import 'package:electro/const/onebtn.dart';
+import 'package:electro/core/storage/vehicle_storage.dart';
+import 'package:electro/logic/blocs/brand/brand_bloc.dart';
+import 'package:electro/logic/blocs/brand/brand_state.dart';
+import 'package:electro/logic/blocs/vehicle_model/vehicle_model_bloc.dart';
+import 'package:electro/logic/blocs/vehicle_model/vehicle_model_state.dart';
+import 'package:electro/logic/blocs/charging_type/charging_type_bloc.dart';
+import 'package:electro/logic/blocs/charging_type/charging_type_state.dart';
+import 'package:electro/models/vehicle_model.dart';
+import 'package:electro/models/charging_type_model.dart';
+import 'package:electro/models/add_vehicle_model.dart';
+import 'package:electro/logic/blocs/add_vehicle/add_vehicle_bloc.dart';
+import 'package:electro/logic/blocs/add_vehicle/add_vehicle_event.dart';
+import 'package:electro/logic/blocs/add_vehicle/add_vehicle_state.dart';
+import 'package:electro/screen/home/home_screen.dart';
+import 'package:electro/utils/toast_utils.dart';
 
 class VehicleSelection extends StatefulWidget {
   const VehicleSelection({super.key});
@@ -877,6 +878,14 @@ class _VehicleSelectionState extends State<VehicleSelection> {
                           backgroundColor: Colors.red,
                         ),
                       );
+                    } else if (state is AddVehicleSuccess) {
+                      // Close the input bottom sheet
+                      Navigator.of(context).pop();
+                      // Show the success bottom sheet
+                      _showFinalSuccessBottomSheet(
+                        vehicleNumberController.text,
+                        state.response,
+                      );
                     }
                   },
                   child: BlocBuilder<AddVehicleBloc, AddVehicleState>(
@@ -892,22 +901,18 @@ class _VehicleSelectionState extends State<VehicleSelection> {
                                     .text
                                     .trim();
                                 if (vehicleNumber.isEmpty) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Please enter your vehicle number.',
-                                      ),
-                                    ),
+                                  ToastUtils.showToast(
+                                    context,
+                                    "Please enter vehicle number",
+                                    isError: true,
                                   );
                                   return;
                                 }
                                 if (selectedChargingType == null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Please select a charging type.',
-                                      ),
-                                    ),
+                                  ToastUtils.showToast(
+                                    context,
+                                    "Please select your charging type",
+                                    isError: true,
                                   );
                                   return;
                                 }
@@ -962,13 +967,6 @@ class _VehicleSelectionState extends State<VehicleSelection> {
                                 // Dispatch add vehicle event
                                 context.read<AddVehicleBloc>().add(
                                   AddVehicleRequested(request),
-                                );
-
-                                // Show loading bottom sheet
-                                Navigator.of(context).pop();
-                                _showSuccessBottomSheet(
-                                  vehicleNumber,
-                                  selectedChargingType!,
                                 );
                               },
                       );

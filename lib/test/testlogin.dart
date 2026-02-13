@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:onecharge/const/onebtn.dart';
-import 'package:onecharge/logic/blocs/auth/auth_bloc.dart';
-import 'package:onecharge/logic/blocs/auth/auth_event.dart';
-import 'package:onecharge/logic/blocs/auth/auth_state.dart';
-import 'package:onecharge/models/login_model.dart';
-import 'package:onecharge/screen/login/user_info.dart';
-import 'package:onecharge/screen/vehicle/vehicle_selection.dart';
-import 'package:onecharge/test/testregister.dart';
-import 'package:onecharge/screen/login/otp_verification_screen.dart';
+import 'package:electro/const/onebtn.dart';
+import 'package:electro/logic/blocs/auth/auth_bloc.dart';
+import 'package:electro/logic/blocs/auth/auth_event.dart';
+import 'package:electro/logic/blocs/auth/auth_state.dart';
+import 'package:electro/models/login_model.dart';
+import 'package:electro/screen/login/user_info.dart';
+import 'package:electro/screen/vehicle/vehicle_selection.dart';
+import 'package:electro/test/testregister.dart';
+import 'package:electro/screen/login/otp_verification_screen.dart';
 
 class Testlogin extends StatefulWidget {
   const Testlogin({super.key});
@@ -165,9 +165,10 @@ class _TestloginState extends State<Testlogin> {
                         const SizedBox(height: 70),
                         Center(
                           child: Image.asset(
-                            'assets/login/logo.png',
+                            'assets/electro.png',
                             fit: BoxFit.cover,
                             height: 30,
+                            color: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 20),

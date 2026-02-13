@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:onecharge/models/issue_category_model.dart';
+import 'package:electro/models/issue_category_model.dart';
 
 abstract class IssueCategoryState extends Equatable {
   const IssueCategoryState();

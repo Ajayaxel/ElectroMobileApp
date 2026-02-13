@@ -1,5 +1,5 @@
-import 'package:onecharge/core/network/api_client.dart';
-import 'package:onecharge/models/charging_type_model.dart';
+import 'package:electro/core/network/api_client.dart';
+import 'package:electro/models/charging_type_model.dart';
 
 class ChargingTypeRepository {
   final ApiClient apiClient;

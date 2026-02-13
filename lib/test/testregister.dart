@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:onecharge/const/onebtn.dart';
-import 'package:onecharge/logic/blocs/auth/auth_bloc.dart';
-import 'package:onecharge/logic/blocs/auth/auth_event.dart';
-import 'package:onecharge/logic/blocs/auth/auth_state.dart';
-import 'package:onecharge/models/register_model.dart';
-import 'package:onecharge/screen/login/user_info.dart';
-import 'package:onecharge/screen/login/otp_verification_screen.dart';
-import 'package:onecharge/test/testlogin.dart';
+import 'package:electro/const/onebtn.dart';
+import 'package:electro/logic/blocs/auth/auth_bloc.dart';
+import 'package:electro/logic/blocs/auth/auth_event.dart';
+import 'package:electro/logic/blocs/auth/auth_state.dart';
+import 'package:electro/models/register_model.dart';
+import 'package:electro/screen/login/user_info.dart';
+import 'package:electro/screen/login/otp_verification_screen.dart';
+import 'package:electro/test/testlogin.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 
@@ -176,9 +176,10 @@ class _TestregisterState extends State<Testregister> {
                             const SizedBox(height: 30),
                             Center(
                               child: Image.asset(
-                                'assets/login/logo.png',
+                                'assets/electro.png',
                                 fit: BoxFit.cover,
                                 height: 30,
+                                color: Colors.white,
                               ),
                             ),
                             const SizedBox(height: 20),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:onecharge/const/onebtn.dart';
-import 'package:onecharge/screen/home/select_payment_bottom_sheet.dart';
-import 'package:onecharge/models/ticket_model.dart';
+import 'package:electro/const/onebtn.dart';
+import 'package:electro/screen/home/select_payment_bottom_sheet.dart';
+import 'package:electro/models/ticket_model.dart';
 
 class PaymentBottomSheet extends StatelessWidget {
   final String vehicleName;

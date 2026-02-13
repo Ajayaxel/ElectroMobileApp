@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:onecharge/const/onebtn.dart';
+import 'package:electro/const/onebtn.dart';
 import 'package:lottie/lottie.dart';
-import 'package:onecharge/screen/home/home_screen.dart';
+import 'package:electro/screen/home/home_screen.dart';
 
 class SuccessBottomSheet extends StatelessWidget {
   const SuccessBottomSheet({super.key});

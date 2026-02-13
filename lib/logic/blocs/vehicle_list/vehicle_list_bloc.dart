@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:onecharge/data/repositories/vehicle_repository.dart';
-import 'package:onecharge/logic/blocs/vehicle_list/vehicle_list_event.dart';
-import 'package:onecharge/logic/blocs/vehicle_list/vehicle_list_state.dart';
+import 'package:electro/data/repositories/vehicle_repository.dart';
+import 'package:electro/logic/blocs/vehicle_list/vehicle_list_event.dart';
+import 'package:electro/logic/blocs/vehicle_list/vehicle_list_state.dart';
 
 class VehicleListBloc extends Bloc<VehicleListEvent, VehicleListState> {
   final VehicleRepository vehicleRepository;

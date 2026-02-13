@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:onecharge/data/repositories/issue_repository.dart';
-import 'package:onecharge/logic/blocs/ticket/ticket_event.dart';
-import 'package:onecharge/logic/blocs/ticket/ticket_state.dart';
+import 'package:electro/data/repositories/issue_repository.dart';
+import 'package:electro/logic/blocs/ticket/ticket_event.dart';
+import 'package:electro/logic/blocs/ticket/ticket_state.dart';
 
 class TicketBloc extends Bloc<TicketEvent, TicketState> {
   final IssueRepository issueRepository;

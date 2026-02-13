@@ -1,5 +1,5 @@
-import 'package:onecharge/core/network/api_client.dart';
-import 'package:onecharge/models/location_model.dart';
+import 'package:electro/core/network/api_client.dart';
+import 'package:electro/models/location_model.dart';
 
 class LocationRepository {
   final ApiClient apiClient;

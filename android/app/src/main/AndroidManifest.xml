@@ -14,7 +14,7 @@
     <!-- Gallery permissions for reading photos and videos (Legacy) -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     <application
-        android:label="One Charge"
+        android:label="Electro"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true">

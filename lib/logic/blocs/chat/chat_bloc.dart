@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:onecharge/data/repositories/chat_repository.dart';
-import 'package:onecharge/logic/blocs/chat/chat_event.dart';
-import 'package:onecharge/logic/blocs/chat/chat_state.dart';
-import 'package:onecharge/models/chat_models.dart';
+import 'package:electro/data/repositories/chat_repository.dart';
+import 'package:electro/logic/blocs/chat/chat_event.dart';
+import 'package:electro/logic/blocs/chat/chat_state.dart';
+import 'package:electro/models/chat_models.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final ChatRepository chatRepository;

@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:onecharge/core/storage/token_storage.dart';
-import 'package:onecharge/data/repositories/auth_repository.dart';
-import 'package:onecharge/logic/blocs/auth/auth_event.dart';
-import 'package:onecharge/logic/blocs/auth/auth_state.dart';
-import 'package:onecharge/models/login_model.dart';
-import 'package:onecharge/models/register_model.dart';
+import 'package:electro/core/storage/token_storage.dart';
+import 'package:electro/data/repositories/auth_repository.dart';
+import 'package:electro/logic/blocs/auth/auth_event.dart';
+import 'package:electro/logic/blocs/auth/auth_state.dart';
+import 'package:electro/models/login_model.dart';
+import 'package:electro/models/register_model.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;

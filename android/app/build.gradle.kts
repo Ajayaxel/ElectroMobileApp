@@ -16,7 +16,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.onecharge"
+    namespace = "com.electro.newapp"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "28.2.13676358"
 
@@ -31,7 +31,7 @@ android {
 
     defaultConfig {
         // Application ID for Google Play Store
-        applicationId = "com.onecharge"
+        applicationId = "com.electro.newapp"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

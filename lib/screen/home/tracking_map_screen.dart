@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:onecharge/const/onebtn.dart';
-import 'package:onecharge/screen/home/widgets/service_notification.dart';
+import 'package:electro/const/onebtn.dart';
+import 'package:electro/screen/home/widgets/service_notification.dart';
 import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:flutter/services.dart';

@@ -10,7 +10,7 @@
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 
 	<key>CFBundleDisplayName</key>
-	<string>Onecharge</string>
+	<string>Electro</string>
 
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
@@ -22,7 +22,7 @@
 	<string>6.0</string>
 
 	<key>CFBundleName</key>
-	<string>onecharge</string>
+	<string>electro</string>
 
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
@@ -41,27 +41,27 @@
 
 	<!-- ✅ Location Permissions -->
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>OneCharge needs your location to auto-detect service requests and dispatch help.</string>
+	<string>Electro needs your location to auto-detect service requests and dispatch help.</string>
 
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Allow OneCharge to keep your service location updated even when the app is active in the background.</string>
+	<string>Allow Electro to keep your service location updated even when the app is active in the background.</string>
 	
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>OneCharge needs your location to provide better service even when the app is in background.</string>
+	<string>Electro needs your location to provide better service even when the app is in background.</string>
 
 	<!-- ✅ Photo Gallery Permissions -->
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>OneCharge needs access to your photo library to upload images while reporting issues.</string>
+	<string>Electro needs access to your photo library to upload images while reporting issues.</string>
 
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>OneCharge needs access to save images to your photo library.</string>
+	<string>Electro needs access to save images to your photo library.</string>
 
 	<key>NSPhotoLibraryLimitedUsageDescription</key>
-	<string>OneCharge needs limited photo access to upload selected images.</string>
+	<string>Electro needs limited photo access to upload selected images.</string>
 
 	<!-- ✅ Camera Permission (Required for iOS 17+) -->
 	<key>NSCameraUsageDescription</key>
-	<string>OneCharge needs camera access to capture images while reporting issues.</string>
+	<string>Electro needs camera access to capture images while reporting issues.</string>
 
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>

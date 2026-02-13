@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:onecharge/models/ticket_model.dart';
+import 'package:electro/models/ticket_model.dart';
 
 abstract class TicketState extends Equatable {
   const TicketState();

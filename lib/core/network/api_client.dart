@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:onecharge/core/storage/token_storage.dart';
+import 'package:electro/core/storage/token_storage.dart';
 
 class ApiClient {
   late Dio _dio;

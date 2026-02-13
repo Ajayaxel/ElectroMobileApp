@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:onecharge/models/add_vehicle_model.dart';
+import 'package:electro/models/add_vehicle_model.dart';
 
 abstract class AddVehicleState extends Equatable {
   const AddVehicleState();

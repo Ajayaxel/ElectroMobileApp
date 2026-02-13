@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:onecharge/core/network/api_client.dart';
-import 'package:onecharge/models/user_profile_model.dart';
+import 'package:electro/core/network/api_client.dart';
+import 'package:electro/models/user_profile_model.dart';
 import 'dart:io';
 
 class ProfileRepository {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:onecharge/const/onebtn.dart';
-import 'package:onecharge/data/repositories/issue_repository.dart';
-import 'package:onecharge/models/ticket_model.dart';
+import 'package:electro/const/onebtn.dart';
+import 'package:electro/data/repositories/issue_repository.dart';
+import 'package:electro/models/ticket_model.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

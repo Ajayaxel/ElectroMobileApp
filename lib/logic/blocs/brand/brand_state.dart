@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:onecharge/models/brand_model.dart';
+import 'package:electro/models/brand_model.dart';
 
 abstract class BrandState extends Equatable {
   const BrandState();

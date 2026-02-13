@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:onecharge/logic/blocs/ticket/ticket_bloc.dart';
-import 'package:onecharge/logic/blocs/ticket/ticket_event.dart';
-import 'package:onecharge/logic/blocs/ticket/ticket_state.dart';
-import 'package:onecharge/models/ticket_model.dart';
+import 'package:electro/logic/blocs/ticket/ticket_bloc.dart';
+import 'package:electro/logic/blocs/ticket/ticket_event.dart';
+import 'package:electro/logic/blocs/ticket/ticket_state.dart';
+import 'package:electro/models/ticket_model.dart';
 import 'package:open_file/open_file.dart';
 import 'package:intl/intl.dart';
 

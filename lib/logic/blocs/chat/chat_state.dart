@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:onecharge/models/chat_models.dart';
+import 'package:electro/models/chat_models.dart';
 
 abstract class ChatState extends Equatable {
   const ChatState();

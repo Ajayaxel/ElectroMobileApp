@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:onecharge/logic/blocs/location/location_bloc.dart';
-import 'package:onecharge/logic/blocs/location/location_event.dart';
-import 'package:onecharge/logic/blocs/location/location_state.dart';
-import 'package:onecharge/models/location_model.dart';
-import 'package:onecharge/screen/home/location_map_screen.dart';
+import 'package:electro/logic/blocs/location/location_bloc.dart';
+import 'package:electro/logic/blocs/location/location_event.dart';
+import 'package:electro/logic/blocs/location/location_state.dart';
+import 'package:electro/models/location_model.dart';
+import 'package:electro/screen/home/location_map_screen.dart';
 
 class MyLocationScreen extends StatefulWidget {
   final bool isPicker;

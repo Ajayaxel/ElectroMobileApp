@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:onecharge/models/login_model.dart';
+import 'package:electro/models/login_model.dart';
 
 abstract class AuthState extends Equatable {
   const AuthState();

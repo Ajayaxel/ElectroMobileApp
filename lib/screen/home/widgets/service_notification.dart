@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:onecharge/models/ticket_model.dart';
+import 'package:electro/models/ticket_model.dart';
 
 class ServiceNotificationOverlay extends StatefulWidget {
   final String

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:onecharge/data/repositories/location_repository.dart';
-import 'package:onecharge/logic/blocs/location/location_event.dart';
-import 'package:onecharge/logic/blocs/location/location_state.dart';
+import 'package:electro/data/repositories/location_repository.dart';
+import 'package:electro/logic/blocs/location/location_event.dart';
+import 'package:electro/logic/blocs/location/location_state.dart';
 
 class LocationBloc extends Bloc<LocationEvent, LocationState> {
   final LocationRepository repository;

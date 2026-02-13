@@ -1,37 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:onecharge/core/network/api_client.dart';
-import 'package:onecharge/data/repositories/brand_repository.dart';
-import 'package:onecharge/logic/blocs/brand/brand_bloc.dart';
-import 'package:onecharge/logic/blocs/brand/brand_event.dart';
+import 'package:electro/core/network/api_client.dart';
+import 'package:electro/data/repositories/brand_repository.dart';
+import 'package:electro/logic/blocs/brand/brand_bloc.dart';
+import 'package:electro/logic/blocs/brand/brand_event.dart';
 
-import 'package:onecharge/data/repositories/vehicle_repository.dart';
-import 'package:onecharge/logic/blocs/vehicle_model/vehicle_model_bloc.dart';
-import 'package:onecharge/logic/blocs/vehicle_model/vehicle_model_event.dart';
+import 'package:electro/data/repositories/vehicle_repository.dart';
+import 'package:electro/logic/blocs/vehicle_model/vehicle_model_bloc.dart';
+import 'package:electro/logic/blocs/vehicle_model/vehicle_model_event.dart';
 
-import 'package:onecharge/data/repositories/issue_repository.dart';
-import 'package:onecharge/logic/blocs/issue_category/issue_category_bloc.dart';
-import 'package:onecharge/logic/blocs/issue_category/issue_category_event.dart';
+import 'package:electro/data/repositories/issue_repository.dart';
+import 'package:electro/logic/blocs/issue_category/issue_category_bloc.dart';
+import 'package:electro/logic/blocs/issue_category/issue_category_event.dart';
 
-import 'package:onecharge/data/repositories/chat_repository.dart';
-import 'package:onecharge/logic/blocs/chat/chat_bloc.dart';
-import 'package:onecharge/data/repositories/charging_type_repository.dart';
-import 'package:onecharge/logic/blocs/charging_type/charging_type_bloc.dart';
-import 'package:onecharge/logic/blocs/charging_type/charging_type_event.dart';
-import 'package:onecharge/data/repositories/auth_repository.dart';
-import 'package:onecharge/logic/blocs/auth/auth_bloc.dart';
-import 'package:onecharge/logic/blocs/add_vehicle/add_vehicle_bloc.dart';
-import 'package:onecharge/logic/blocs/vehicle_list/vehicle_list_bloc.dart';
-import 'package:onecharge/logic/blocs/vehicle_list/vehicle_list_event.dart';
-import 'package:onecharge/logic/blocs/ticket/ticket_bloc.dart';
-import 'package:onecharge/logic/blocs/delete_vehicle/delete_vehicle_bloc.dart';
-import 'package:onecharge/data/repositories/profile_repository.dart';
-import 'package:onecharge/logic/blocs/profile/profile_bloc.dart';
-import 'package:onecharge/logic/blocs/profile/profile_event.dart';
-import 'package:onecharge/data/repositories/location_repository.dart';
-import 'package:onecharge/logic/blocs/location/location_bloc.dart';
-import 'package:onecharge/logic/blocs/location/location_event.dart';
-import 'package:onecharge/screen/onbording/splash.dart';
+import 'package:electro/data/repositories/chat_repository.dart';
+import 'package:electro/logic/blocs/chat/chat_bloc.dart';
+import 'package:electro/data/repositories/charging_type_repository.dart';
+import 'package:electro/logic/blocs/charging_type/charging_type_bloc.dart';
+import 'package:electro/logic/blocs/charging_type/charging_type_event.dart';
+import 'package:electro/data/repositories/auth_repository.dart';
+import 'package:electro/logic/blocs/auth/auth_bloc.dart';
+import 'package:electro/logic/blocs/add_vehicle/add_vehicle_bloc.dart';
+import 'package:electro/logic/blocs/vehicle_list/vehicle_list_bloc.dart';
+import 'package:electro/logic/blocs/vehicle_list/vehicle_list_event.dart';
+import 'package:electro/logic/blocs/ticket/ticket_bloc.dart';
+import 'package:electro/logic/blocs/delete_vehicle/delete_vehicle_bloc.dart';
+import 'package:electro/data/repositories/profile_repository.dart';
+import 'package:electro/logic/blocs/profile/profile_bloc.dart';
+import 'package:electro/logic/blocs/profile/profile_event.dart';
+import 'package:electro/data/repositories/location_repository.dart';
+import 'package:electro/logic/blocs/location/location_bloc.dart';
+import 'package:electro/logic/blocs/location/location_event.dart';
+import 'package:electro/screen/onbording/splash.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -126,7 +126,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'OneCharge',
+      title: 'Electro',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,

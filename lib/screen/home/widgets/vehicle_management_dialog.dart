@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:onecharge/const/onebtn.dart';
-import 'package:onecharge/core/storage/vehicle_storage.dart';
-import 'package:onecharge/resources/app_resources.dart';
-import 'package:onecharge/screen/vehicle/vehicle_selection.dart';
+import 'package:electro/const/onebtn.dart';
+import 'package:electro/core/storage/vehicle_storage.dart';
+import 'package:electro/resources/app_resources.dart';
+import 'package:electro/screen/vehicle/vehicle_selection.dart';
 
 class VehicleManagementDialog extends StatefulWidget {
   final String vehicleName;

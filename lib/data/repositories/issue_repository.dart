@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:onecharge/core/network/api_client.dart';
-import 'package:onecharge/models/issue_category_model.dart';
-import 'package:onecharge/models/ticket_model.dart';
+import 'package:electro/core/network/api_client.dart';
+import 'package:electro/models/issue_category_model.dart';
+import 'package:electro/models/ticket_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 class IssueRepository {

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:onecharge/data/repositories/issue_repository.dart';
-import 'package:onecharge/logic/blocs/issue_category/issue_category_event.dart';
-import 'package:onecharge/logic/blocs/issue_category/issue_category_state.dart';
+import 'package:electro/data/repositories/issue_repository.dart';
+import 'package:electro/logic/blocs/issue_category/issue_category_event.dart';
+import 'package:electro/logic/blocs/issue_category/issue_category_state.dart';
 
 class IssueCategoryBloc extends Bloc<IssueCategoryEvent, IssueCategoryState> {
   final IssueRepository issueRepository;

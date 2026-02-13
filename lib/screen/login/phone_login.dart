@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:onecharge/const/onebtn.dart';
+import 'package:electro/const/onebtn.dart';
 import 'dart:async';
 
-import 'package:onecharge/screen/login/user_info.dart';
+import 'package:electro/screen/login/user_info.dart';
 
 class PhoneLogin extends StatefulWidget {
   const PhoneLogin({super.key});

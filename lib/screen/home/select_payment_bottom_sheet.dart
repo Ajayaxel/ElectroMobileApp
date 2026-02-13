@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:onecharge/const/onebtn.dart';
-import 'package:onecharge/screen/home/success_bottom_sheet.dart';
-import 'package:onecharge/screen/payment/payment_webview_screen.dart';
-import 'package:onecharge/models/ticket_model.dart';
+import 'package:electro/const/onebtn.dart';
+import 'package:electro/screen/home/success_bottom_sheet.dart';
+import 'package:electro/screen/payment/payment_webview_screen.dart';
+import 'package:electro/models/ticket_model.dart';
 
 class SelectPaymentBottomSheet extends StatefulWidget {
   final PaymentBreakdown? paymentBreakdown;

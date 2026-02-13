@@ -4,7 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:google_place/google_place.dart';
 import 'dart:async';
-import 'package:onecharge/models/location_model.dart';
+import 'package:electro/models/location_model.dart';
 
 class LocationMapScreen extends StatefulWidget {
   final String initialAddress;

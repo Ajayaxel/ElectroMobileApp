@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:onecharge/data/repositories/vehicle_repository.dart';
+import 'package:electro/data/repositories/vehicle_repository.dart';
 import 'vehicle_model_event.dart';
 import 'vehicle_model_state.dart';
 

@@ -1,7 +1,7 @@
-import 'package:onecharge/core/network/api_client.dart';
-import 'package:onecharge/models/vehicle_model.dart';
-import 'package:onecharge/models/add_vehicle_model.dart';
-import 'package:onecharge/models/vehicle_list_model.dart';
+import 'package:electro/core/network/api_client.dart';
+import 'package:electro/models/vehicle_model.dart';
+import 'package:electro/models/add_vehicle_model.dart';
+import 'package:electro/models/vehicle_list_model.dart';
 
 class VehicleRepository {
   final ApiClient apiClient;

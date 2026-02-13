@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:onecharge/models/country.dart';
-import 'package:onecharge/data/countries_data.dart';
-import 'package:onecharge/utils/country_utils.dart';
+import 'package:electro/models/country.dart';
+import 'package:electro/data/countries_data.dart';
+import 'package:electro/utils/country_utils.dart';
 
 class CountryPicker {
   static void show({

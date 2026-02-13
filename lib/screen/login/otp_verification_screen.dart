@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:onecharge/const/onebtn.dart';
-import 'package:onecharge/logic/blocs/auth/auth_bloc.dart';
-import 'package:onecharge/logic/blocs/auth/auth_event.dart';
-import 'package:onecharge/logic/blocs/auth/auth_state.dart';
+import 'package:electro/const/onebtn.dart';
+import 'package:electro/logic/blocs/auth/auth_bloc.dart';
+import 'package:electro/logic/blocs/auth/auth_event.dart';
+import 'package:electro/logic/blocs/auth/auth_state.dart';
 
-import 'package:onecharge/screen/vehicle/vehicle_selection.dart';
-import 'package:onecharge/screen/login/phone_login.dart';
-import 'package:onecharge/test/testlogin.dart';
+import 'package:electro/screen/vehicle/vehicle_selection.dart';
+import 'package:electro/screen/login/phone_login.dart';
+import 'package:electro/test/testlogin.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final String email;
@@ -201,9 +201,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
-                          'assets/login/logo.png',
+                          'assets/electro.png',
                           fit: BoxFit.cover,
                           height: 30,
+                          color: Colors.white,
                         ),
                         const SizedBox(height: 20),
                         const Text(

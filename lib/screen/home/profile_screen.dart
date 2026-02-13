@@ -2,12 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:onecharge/const/onebtn.dart';
-import 'package:onecharge/logic/blocs/profile/profile_bloc.dart';
-import 'package:onecharge/logic/blocs/profile/profile_event.dart';
-import 'package:onecharge/logic/blocs/profile/profile_state.dart';
-import 'package:onecharge/utils/toast_utils.dart';
-import 'package:onecharge/models/user_profile_model.dart';
+import 'package:electro/const/onebtn.dart';
+import 'package:electro/logic/blocs/profile/profile_bloc.dart';
+import 'package:electro/logic/blocs/profile/profile_event.dart';
+import 'package:electro/logic/blocs/profile/profile_state.dart';
+import 'package:electro/utils/toast_utils.dart';
+import 'package:electro/models/user_profile_model.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

@@ -1,5 +1,5 @@
-import 'package:onecharge/core/network/api_client.dart';
-import 'package:onecharge/models/chat_models.dart';
+import 'package:electro/core/network/api_client.dart';
+import 'package:electro/models/chat_models.dart';
 
 class ChatRepository {
   final ApiClient apiClient;

@@ -1,4 +1,4 @@
-import 'package:onecharge/models/country.dart';
+import 'package:electro/models/country.dart';
 
 class CountriesData {
   static final List<Country> allCountries = [

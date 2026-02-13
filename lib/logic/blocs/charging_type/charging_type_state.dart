@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:onecharge/models/charging_type_model.dart';
+import 'package:electro/models/charging_type_model.dart';
 
 abstract class ChargingTypeState extends Equatable {
   const ChargingTypeState();

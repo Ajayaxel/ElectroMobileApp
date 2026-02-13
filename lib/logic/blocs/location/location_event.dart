@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:onecharge/models/location_model.dart';
+import 'package:electro/models/location_model.dart';
 
 abstract class LocationEvent extends Equatable {
   const LocationEvent();
