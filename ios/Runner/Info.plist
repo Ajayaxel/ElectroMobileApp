@@ -38,31 +38,6 @@
 
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-
-	<!-- ✅ Location Permissions -->
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Electro needs your location to auto-detect service requests and dispatch help.</string>
-
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Allow Electro to keep your service location updated even when the app is active in the background.</string>
-	
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Electro needs your location to provide better service even when the app is in background.</string>
-
-	<!-- ✅ Photo Gallery Permissions -->
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Electro needs access to your photo library to upload images while reporting issues.</string>
-
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Electro needs access to save images to your photo library.</string>
-
-	<key>NSPhotoLibraryLimitedUsageDescription</key>
-	<string>Electro needs limited photo access to upload selected images.</string>
-
-	<!-- ✅ Camera Permission (Required for iOS 17+) -->
-	<key>NSCameraUsageDescription</key>
-	<string>Electro needs camera access to capture images while reporting issues.</string>
-
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 
@@ -90,6 +65,12 @@
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to your location to fetch shipping address.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app needs access to your location to fetch shipping address.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs access to your location to fetch shipping address.</string>
 </dict>
 </plist>
 

@@ -1,138 +1,91 @@
+import 'package:electro/core/theme/app_colors.dart';
+import 'package:electro/core/utils/shared_prefs_util.dart';
+import 'package:electro/features/auth/domain/repositories/auth_repository.dart';
+import 'package:electro/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:electro/features/auth/presentation/bloc/auth_event.dart';
+import 'package:electro/features/auth/presentation/pages/login_page.dart';
+import 'package:electro/features/home/data/home_repository.dart';
+import 'package:electro/features/main/presentation/pages/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:electro/core/network/api_client.dart';
-import 'package:electro/data/repositories/brand_repository.dart';
-import 'package:electro/logic/blocs/brand/brand_bloc.dart';
-import 'package:electro/logic/blocs/brand/brand_event.dart';
 
-import 'package:electro/data/repositories/vehicle_repository.dart';
-import 'package:electro/logic/blocs/vehicle_model/vehicle_model_bloc.dart';
-import 'package:electro/logic/blocs/vehicle_model/vehicle_model_event.dart';
+import 'package:electro/features/cart/data/cart_repository.dart';
+import 'package:electro/features/cart/bloc/cart_bloc.dart';
+import 'package:electro/features/cart/bloc/cart_event_state.dart';
+import 'package:electro/features/address/data/repositories/address_repository.dart';
+import 'package:electro/features/address/presentation/bloc/address_bloc.dart';
+import 'package:electro/features/address/presentation/bloc/address_event.dart';
+import 'package:electro/features/orders/presentation/bloc/order_bloc.dart';
+import 'package:electro/features/cart/data/repositories/order_repository.dart';
+import 'package:electro/features/wishlist/presentation/bloc/wishlist_bloc.dart';
+import 'package:electro/features/wishlist/data/wishlist_repository.dart';
+import 'package:electro/features/home/bloc/home_bloc.dart';
+import 'package:electro/core/network/dio_client.dart';
+import 'package:electro/features/auth/presentation/bloc/auth_state.dart';
 
-import 'package:electro/data/repositories/issue_repository.dart';
-import 'package:electro/logic/blocs/issue_category/issue_category_bloc.dart';
-import 'package:electro/logic/blocs/issue_category/issue_category_event.dart';
-
-import 'package:electro/data/repositories/chat_repository.dart';
-import 'package:electro/logic/blocs/chat/chat_bloc.dart';
-import 'package:electro/data/repositories/charging_type_repository.dart';
-import 'package:electro/logic/blocs/charging_type/charging_type_bloc.dart';
-import 'package:electro/logic/blocs/charging_type/charging_type_event.dart';
-import 'package:electro/data/repositories/auth_repository.dart';
-import 'package:electro/logic/blocs/auth/auth_bloc.dart';
-import 'package:electro/logic/blocs/add_vehicle/add_vehicle_bloc.dart';
-import 'package:electro/logic/blocs/vehicle_list/vehicle_list_bloc.dart';
-import 'package:electro/logic/blocs/vehicle_list/vehicle_list_event.dart';
-import 'package:electro/logic/blocs/ticket/ticket_bloc.dart';
-import 'package:electro/logic/blocs/delete_vehicle/delete_vehicle_bloc.dart';
-import 'package:electro/data/repositories/profile_repository.dart';
-import 'package:electro/logic/blocs/profile/profile_bloc.dart';
-import 'package:electro/logic/blocs/profile/profile_event.dart';
-import 'package:electro/data/repositories/location_repository.dart';
-import 'package:electro/logic/blocs/location/location_bloc.dart';
-import 'package:electro/logic/blocs/location/location_event.dart';
-import 'package:electro/screen/onbording/splash.dart';
-
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  final apiClient = ApiClient();
-  final brandRepository = BrandRepository(apiClient: apiClient);
-  final vehicleRepository = VehicleRepository(apiClient: apiClient);
-  final issueRepository = IssueRepository(apiClient: apiClient);
-  final chatRepository = ChatRepository(apiClient: apiClient);
-  final chargingTypeRepository = ChargingTypeRepository(apiClient: apiClient);
-  final authRepository = AuthRepository(apiClient: apiClient);
-  final profileRepository = ProfileRepository(apiClient: apiClient);
-  final locationRepository = LocationRepository(apiClient: apiClient);
-
-  runApp(
-    MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider<BrandRepository>.value(value: brandRepository),
-        RepositoryProvider<VehicleRepository>.value(value: vehicleRepository),
-        RepositoryProvider<IssueRepository>.value(value: issueRepository),
-        RepositoryProvider<ChatRepository>.value(value: chatRepository),
-        RepositoryProvider<ChargingTypeRepository>.value(
-          value: chargingTypeRepository,
-        ),
-        RepositoryProvider<AuthRepository>.value(value: authRepository),
-        RepositoryProvider<ProfileRepository>.value(value: profileRepository),
-        RepositoryProvider<LocationRepository>.value(value: locationRepository),
-      ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<BrandBloc>(
-            create: (context) =>
-                BrandBloc(brandRepository: brandRepository)..add(FetchBrands()),
-          ),
-          BlocProvider<VehicleModelBloc>(
-            create: (context) =>
-                VehicleModelBloc(vehicleRepository: vehicleRepository)
-                  ..add(FetchVehicleModels()),
-          ),
-          BlocProvider<IssueCategoryBloc>(
-            create: (context) =>
-                IssueCategoryBloc(issueRepository: issueRepository)
-                  ..add(FetchIssueCategories()),
-          ),
-          BlocProvider<ChatBloc>(
-            create: (context) => ChatBloc(chatRepository: chatRepository),
-          ),
-          BlocProvider<ChargingTypeBloc>(
-            create: (context) =>
-                ChargingTypeBloc(chargingTypeRepository: chargingTypeRepository)
-                  ..add(FetchChargingTypes()),
-          ),
-          BlocProvider<AuthBloc>(
-            create: (context) => AuthBloc(authRepository: authRepository),
-          ),
-          BlocProvider<AddVehicleBloc>(
-            create: (context) =>
-                AddVehicleBloc(vehicleRepository: vehicleRepository),
-          ),
-          BlocProvider<VehicleListBloc>(
-            create: (context) =>
-                VehicleListBloc(vehicleRepository: vehicleRepository)
-                  ..add(FetchVehicles()),
-          ),
-          BlocProvider<TicketBloc>(
-            create: (context) => TicketBloc(issueRepository: issueRepository),
-          ),
-          BlocProvider<DeleteVehicleBloc>(
-            create: (context) =>
-                DeleteVehicleBloc(vehicleRepository: vehicleRepository),
-          ),
-          BlocProvider<ProfileBloc>(
-            create: (context) =>
-                ProfileBloc(profileRepository: profileRepository)
-                  ..add(FetchProfile()),
-          ),
-          BlocProvider<LocationBloc>(
-            create: (context) =>
-                LocationBloc(repository: locationRepository)
-                  ..add(FetchLocations()),
-          ),
-        ],
-        child: const MyApp(),
-      ),
-    ),
-  );
+  final isLoggedIn = await SharedPrefsUtil.isLoggedIn();
+  runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Electro',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        fontFamily: 'Lufga',
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) {
+            final authBloc = AuthBloc(authRepository: AuthRepository());
+            DioClient.onUnauthorized = () {
+              if (authBloc.state is AuthSuccess) {
+                authBloc.add(LogoutRequested());
+              }
+            };
+            return authBloc..add(AppStarted());
+          },
+        ),
+        BlocProvider(
+          create: (context) => CartBloc(CartRepository())..add(FetchCart()),
+        ),
+        BlocProvider(
+          create: (context) =>
+              AddressBloc(AddressRepository())..add(FetchAddresses()),
+        ),
+        BlocProvider(
+          create: (context) => OrderBloc(orderRepository: OrderRepository()),
+        ),
+        BlocProvider(
+          create: (context) =>
+              WishlistBloc(WishlistRepository())..add(FetchWishlist()),
+        ),
+        BlocProvider(create: (context) => HomeBloc(HomeRepository())),
+      ],
+      child: MaterialApp(
+        title: 'Electro',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          scaffoldBackgroundColor: AppColors.backgroundDark,
+          fontFamily: 'Lufga',
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.white,
+            surfaceTintColor: Colors.white,
+            elevation: 0,
+            centerTitle: true,
+            iconTheme: IconThemeData(color: Colors.black),
+            titleTextStyle: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Lufga',
+            ),
+          ),
+        ),
+        home: isLoggedIn ? const MainScreen() : const LoginPage(),
       ),
-      home: const SplashScreen(),
     );
   }
 }

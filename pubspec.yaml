@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+2
+version: 1.0.9+3
 
 environment:
   sdk: ^3.9.2
@@ -38,23 +38,15 @@ dependencies:
   shared_preferences: ^2.2.2
   dio: ^5.7.0
   flutter_bloc: ^8.1.5
-  equatable: ^2.0.5
-  image_picker: ^1.1.2
-  video_player: ^2.8.2
-  google_maps_flutter: ^2.9.0
-  geolocator: ^11.1.0
-  geocoding: ^3.0.0
-  google_place: ^0.4.7
-  intl_phone_field: ^3.2.0
-  url_launcher: ^6.2.5
-  permission_handler: ^11.3.1
-  pusher_channels_flutter: ^2.2.1
-  path_provider: ^2.1.2
-  lottie: ^2.7.0
-  open_file: ^3.5.1
-  webview_flutter: ^4.10.0
+  equatable: ^2.0.7
   intl: ^0.20.2
+  url_launcher: ^6.3.1
+  image_picker: ^1.2.1
   shimmer: ^3.0.0
+  google_maps_flutter: ^2.16.0
+  geolocator: ^14.0.2
+  geocoding: ^4.0.0
+
 
 
 
@@ -87,10 +79,8 @@ flutter:
     - assets/
     - assets/onbord/
     - assets/login/
-    - assets/vehicle/
     - assets/home/
-    - assets/issue/
-    - assets/icon/
+ 
     
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -128,6 +118,6 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/icon/favicon one 64.png"
+  image_path: "assets/login/appicon.png"
   min_sdk_android: 21
   remove_alpha_ios: true
